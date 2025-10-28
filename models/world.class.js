@@ -74,7 +74,7 @@ class World {
         this.enemies.forEach((enemy) => {
             let interval = setInterval(() => {
                 if (this.main.isColliding(enemy) && enemy.isAlive) {
-                    if (this.main.isAirborne()) {
+                    if (this.main.isAirborne() && this.main.isFalling()) {
                         this.enemyDies(enemy);
                     } else {
                         this.heroTakesHit();

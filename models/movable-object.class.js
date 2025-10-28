@@ -85,9 +85,15 @@ class MovableObject extends DrawableObject {
                 if (this.isAirborne() || this.speedY > 0) {
                     this.y -= this.speedY;
                     this.speedY -= acceleration;
+                    
+                    
                 }
             }
         }, 1000 / 25);
+    }
+
+    isFalling() {
+        return this.speedY < 0
     }
 
     isAirborne() {

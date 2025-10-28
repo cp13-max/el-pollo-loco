@@ -41,7 +41,7 @@ canvas {
     position: absolute;
     bottom: 1%;
     right: 1%;
-    filter: brightness(0) saturate(100%);
+    /* filter: brightness(0) saturate(100%); */
     cursor: pointer;
 }
 
@@ -84,7 +84,8 @@ canvas {
 .full-screen:hover,
 .restart-button:hover,
 .play-music-button:hover,
-.return-to-screen-button:hover {
+.return-to-screen-button:hover,
+.legal-notice:hover {
     scale: 1.2;
 }
 
