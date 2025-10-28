@@ -72,7 +72,7 @@ class MovableObject extends DrawableObject {
     }
 
     playAnimation(images) {
-        if (!isGamePaused) {
+        if (!gameIsPaused) {
             let i = this.currentImage % images.length;
             this.img = this.imageCache[images[i]];
             this.currentImage++;
@@ -81,7 +81,7 @@ class MovableObject extends DrawableObject {
 
     applyGravity(acceleration) {
         setInterval(() => {
-            if (!isGamePaused) {
+            if (!gameIsPaused) {
                 if (this.isAirborne() || this.speedY > 0) {
                     this.y -= this.speedY;
                     this.speedY -= acceleration;

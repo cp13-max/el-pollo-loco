@@ -127,7 +127,7 @@ class World {
             if (this.main.isColliding(coin)) {
                 this.main.collectCoin();
                 let newCollectSound = new Audio('sounds/collect.mp3')
-                if (isMusicMute) {
+                if (musicIsmute) {
                     newCollectSound.volume = 0
                 }
                 this.main.playSound(newCollectSound);
@@ -142,7 +142,7 @@ class World {
             if (this.main.isColliding(bottle)) {
                 this.main.collectBottle();
                 let newCollectSound = new Audio('sounds/collect.mp3')
-                if (isMusicMute) {
+                if (musicIsmute) {
                     newCollectSound.volume = 0
                 }
                 this.main.playSound(newCollectSound);
@@ -452,8 +452,8 @@ class World {
         this.bottleBar.setBarPercentage(this.main.bottles);
         this.main.coins = 0;
         this.coinBar.setBarPercentage(this.main.coins);
-        clearInterval(this.main.controlsAndAnimas);
-        this.main.controlsAndAnimas = this.main.controlsAndAnimations();
+        clearInterval(this.main.movementAnimas);
+        this.main.movementAnimas = this.main.movementAnimations();
     }
 
     loadGameOverScreen() {

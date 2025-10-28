@@ -41,14 +41,14 @@ class ThrowableBottle extends MovableObject {
 
     motion(direction) {
         this.posX = setInterval(() => {
-            if (!isGamePaused) {
+            if (!gameIsPaused) {
                 if (direction) {
                     this.autoMoveLeft();
                 } else {this.autoMoveRight();}
             
         }}, 1000/60);
         this.posY = setInterval(() => {
-            if (!isGamePaused) {
+            if (!gameIsPaused) {
             this.y -= this.speedY;
             this.speedY -= 0.2;
     }}, 1000/60);

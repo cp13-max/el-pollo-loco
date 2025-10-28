@@ -65,7 +65,7 @@ class Endboss extends MovableObject {
     }
 
     animate() {
-        if (!isGamePaused) {
+        if (!gameIsPaused) {
             this.autoMove(this.speed);
         }
     }
@@ -92,7 +92,7 @@ class Endboss extends MovableObject {
     }
 
     checkForPausedMusic() {
-        if (isGamePaused) {
+        if (gameIsPaused) {
             this.pauseSound(this.SOUND_CLUCKING);
         } else {
             this.playSound(this.SOUND_CLUCKING);

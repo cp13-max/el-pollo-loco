@@ -28,7 +28,7 @@ class Chicken extends MovableObject {
     }
 
     animate() {
-        if (!isGamePaused) {
+        if (!gameIsPaused) {
             this.moveAnima();
             this.autoMove(this.speed);
         }

@@ -6,7 +6,7 @@ class Main extends MovableObject {
     speed = 5;
     idleTimeStart = 0;
     hasIdleTimeStarted = false;
-    controlsAndAnimas;
+    movementAnimas;
     world;
 
     SOUND_WALKING = new Audio('sounds/walking-outside.mp3');
@@ -102,7 +102,7 @@ class Main extends MovableObject {
         this.animate(level_end);
         this.applyGravity(2);
         this.saveDefaultStatus(defaultHero, this.x, this.y);
-        this.controlsAndAnimas = this.controlsAndAnimations();
+        this.movementAnimas = this.movementAnimations();
     }
 
     damageThrowBack() {
@@ -124,76 +124,81 @@ class Main extends MovableObject {
 
     animate(level_end) {
         setInterval(() => {
-            if (!isGamePaused) {
-                if (this.world.keyboard.RIGHT && this.x < level_end) {
-                    this.moveRight();
-                }
-                if (this.world.keyboard.LEFT && this.x > 120) {
-                    this.moveLeft();
-                }
-
-                this.world.camera_x = -this.x + 120;
+            if (gameIsPaused) {
+                return;
             }
+
+            if (gameIsPaused) {
+                console.log('paused');
+                ;
+            }
+            
+            if (this.world.keyboard.RIGHT && this.x < level_end) {
+                this.moveRight();
+            }
+            if (this.world.keyboard.LEFT && this.x > 120) {
+                this.moveLeft();
+            }
+
+            this.world.camera_x = -this.x + 120;
         }, 1000 / 60);
     }
 
-    controlsAndAnimations() {
+    movementAnimations() {
         return setInterval(() => {
-            if (!isGamePaused) {
-                if (this.isDead()) {
-                    this.deathAnima();
+            if (gameIsPaused) {
+                return;
+            }
+            if (this.isDead()) {
+                this.deathAnima();
+                return;
+            }
+            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
+                this.hasIdleTimeStarted = false;
+            }
+            if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+            }
+            if (this.world.keyboard.SPACE & !this.isAirborne()) {
+                this.jump();
+
+                this.playSound(this.SOUND_JUMPING);
+                setTimeout(() => {
+                    this.resetSound(this.SOUND_JUMPING);
+                }, 500);
+            }
+
+            if (this.isAirborne()) {
+                this.playAnimation(this.IMAGES_JUMPING);
+            }
+            if (this.world.keyboard.RIGHT & !this.isAirborne() || this.world.keyboard.LEFT & !this.isAirborne()) {
+                this.playSound(this.SOUND_WALKING);
+                this.playAnimation(this.IMAGES_WALKING);
+            }
+
+            if (!this.world.keyboard.RIGHT & !this.world.keyboard.LEFT || this.isAirborne()) {
+                this.resetSound(this.SOUND_WALKING);
+            }
+
+            if (
+                !this.world.keyboard.RIGHT &
+                !this.world.keyboard.LEFT &
+                !this.world.keyboard.SPACE &
+                !this.isAirborne() &
+                !this.isHurt()
+            ) {
+                if (this.isIdle() == 'long idle') {
+                    this.playAnimation(this.IMAGES_LONG_IDLE);
+                } else if (this.isIdle() == 'idle') {
+                    this.playAnimation(this.IMAGES_IDLE);
                 } else {
-                    if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
-                        this.hasIdleTimeStarted = false;
-                    }
-                    if (this.isHurt()) {
-                        this.playAnimation(this.IMAGES_HURT);
-                    }
-                    if (this.world.keyboard.SPACE & !this.isAirborne()) {
-                        this.jump();
-
-                        this.playSound(this.SOUND_JUMPING);
-                        setTimeout(() => {
-                            this.resetSound(this.SOUND_JUMPING);
-                        }, 500);
-                    }
-
-                    if (this.isAirborne()) {
-                        this.playAnimation(this.IMAGES_JUMPING);
-                    }
-                    if (
-                        this.world.keyboard.RIGHT & !this.isAirborne() ||
-                        this.world.keyboard.LEFT & !this.isAirborne()
-                    ) {
-                        this.playSound(this.SOUND_WALKING);
-                        this.playAnimation(this.IMAGES_WALKING);
-                    }
-
-                    if (!this.world.keyboard.RIGHT & !this.world.keyboard.LEFT || this.isAirborne()) {
-                        this.resetSound(this.SOUND_WALKING);
-                    }
-
-                    if (
-                        !this.world.keyboard.RIGHT &
-                        !this.world.keyboard.LEFT &
-                        !this.world.keyboard.SPACE &
-                        !this.isAirborne() &
-                        !this.isHurt()
-                    ) {
-                        if (this.isIdle() == 'long idle') {
-                            this.playAnimation(this.IMAGES_LONG_IDLE);
-                        } else if (this.isIdle() == 'idle') {
-                            this.playAnimation(this.IMAGES_IDLE);
-                        } else {
-                            this.loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
-                        }
-
-                        if (!this.hasIdleTimeStarted) {
-                            this.idleTimeStart = new Date().getTime();
-                        }
-                        this.hasIdleTimeStarted = true;
-                    }
+                    this.loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
                 }
+
+                if (!this.hasIdleTimeStarted) {
+                    this.idleTimeStart = new Date().getTime();
+                }
+                this.hasIdleTimeStarted = true;
             }
         }, 100);
     }
@@ -217,7 +222,7 @@ class Main extends MovableObject {
         this.resetSound(this.SOUND_WALKING);
         this.y += 20;
         setTimeout(() => {
-            clearInterval(this.controlsAndAnimas);
+            clearInterval(this.movementAnimas);
         }, 1000);
     }
 

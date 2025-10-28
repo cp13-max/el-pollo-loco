@@ -1,7 +1,6 @@
 let canvas;
 let world;
-let gameStarted = false;
-let fullScreen = false;
+
 let keyboard = new Keyboard();
 const mediaQueryMatch = window.matchMedia('(orientation: landscape) and (max-width: 600px) and (max-height: 500px)');
 
@@ -14,11 +13,11 @@ function init() {
 }
 
 function setMusicStatus() {
-    let text = localStorage.getItem('isMusicMuted');
-    isMusicMute = JSON.parse(text);
+    let text = localStorage.getItem('musicIsmuted');
+    musicIsmute = JSON.parse(text);
 
     setImageForIcon(
-        isMusicMute,
+        musicIsmute,
         'play-music-button',
         './img/downloaded/mute-icon.png',
         './img/downloaded/speaker-icon.png'
@@ -40,10 +39,10 @@ function restartGame() {
 }
 
 function startGame() {
-    if (!gameStarted) {
+    if (!gameHasStarted) {
         setLevel1();
         setWorld(canvas, keyboard, level1);
-        gameStarted = true;
+        gameHasStarted = true;
     }
     removeStartScreen();
     pauseContinueGame();
@@ -51,15 +50,15 @@ function startGame() {
 }
 
 function setDefaultMusicVolume() {
-    if (!isMusicMute) {
+    if (!musicIsmute) {
         world.unMuteAllMusic();
     } else world.muteAllMusic();
 }
 
 function pauseContinueGame() {
-    isGamePaused = !isGamePaused;
+    gameIsPaused = !gameIsPaused;
     setImageForIcon(
-        isGamePaused,
+        gameIsPaused,
         'start-button',
         './img/downloaded/real-start-btn.png',
         './img/downloaded/real-pause-btn.png'
@@ -80,29 +79,29 @@ function loadStartScreen() {
 }
 
 function returnToScreen() {
-    if (!gameStarted) {
+    if (!gameHasStarted) {
         return;
     }
     world.resetGame();
-    isGamePaused = false;
+    gameIsPaused = false;
     pauseContinueGame();
     world.muteAllMusic();
     loadStartScreen();
 }
 
 function muteMusic() {
-    isMusicMute = !isMusicMute;
+    musicIsmute = !musicIsmute;
 
-    localStorage.setItem('isMusicMuted', isMusicMute);
+    localStorage.setItem('musicIsmuted', musicIsmute);
 
     setImageForIcon(
-        isMusicMute,
+        musicIsmute,
         'play-music-button',
         './img/downloaded/mute-icon.png',
         './img/downloaded/speaker-icon.png'
     );
-    if (gameStarted) {
-        if (isMusicMute) {
+    if (gameHasStarted) {
+        if (musicIsmute) {
             world.muteAllMusic();
         } else {
             world.unMuteAllMusic();
@@ -123,7 +122,7 @@ window.addEventListener('keydown', (e) => {
         keyboard.F = true;
     }
     if (e.code == 'KeyH') {
-        isGamePaused = !isGamePaused;
+        gameIsPaused = !gameIsPaused;
     }
     if (e.code == 'KeyA' || e.code == 'ArrowLeft') {
         keyboard.LEFT = true;
