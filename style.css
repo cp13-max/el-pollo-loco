@@ -127,6 +127,20 @@ canvas {
         contrast(89%);
 }
 
+.legal-notice{
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    bottom: 1%;
+    left: 1%;
+    /* filter: brightness(0) saturate(100%); */
+    cursor: pointer;
+}
+
+.legal-notice-container{
+    max-width: 1000px;
+}
+
 @font-face {
     font-family: 'Tagesschrift';
     src: url('fonts/Tagesschrift-Regular.ttf');
@@ -188,6 +202,10 @@ h1 {
 
     .mobile-bar {
         display: flex;
+    }
+
+    .legal-notice {
+        bottom: 15%;
     }
 }
 
