@@ -6,6 +6,8 @@ class Main extends MovableObject {
     speed = 5;
     idleTimeStart = 0;
     hasIdleTimeStarted = false;
+    // isJumping = false;
+    // animationIsPlaying = false;
     movementAnimas;
     world;
 
@@ -154,21 +156,26 @@ class Main extends MovableObject {
                 return;
             }
 
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
-                this.hasIdleTimeStarted = false;
-            }
-
-            if (this.world.keyboard.SPACE & !this.isAirborne()) {
+            if (this.world.keyboard.SPACE && !this.isAirborne()) {
                 this.jump();
-
-                this.playSound(this.SOUND_JUMPING);
-                setTimeout(() => {
-                    this.resetSound(this.SOUND_JUMPING);
-                }, 500);
             }
 
             if (this.isAirborne()) {
-                this.playAnimation(this.IMAGES_JUMPING);
+                if (this.speedY > 5) {
+                    this.loadImage('img/2_character_pepe/3_jump/J-34.png');
+                }
+                if (this.speedY < 5 && this.speedY > -5) {
+                    this.currentImage++;
+                    this.loadImage('img/2_character_pepe/3_jump/J-35.png');
+                }
+                if (this.speedY < -5 && this.speedY > -30) {
+                    this.currentImage++;
+                    this.loadImage('img/2_character_pepe/3_jump/J-36.png');
+                }
+            }
+            
+            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
+                this.hasIdleTimeStarted = false;
             }
             if (this.world.keyboard.RIGHT & !this.isAirborne() || this.world.keyboard.LEFT & !this.isAirborne()) {
                 this.playSound(this.SOUND_WALKING);
@@ -237,5 +244,38 @@ class Main extends MovableObject {
 
     jump() {
         this.speedY = 30;
+        this.playSound(this.SOUND_JUMPING);
+        setTimeout(() => {
+            this.resetSound(this.SOUND_JUMPING);
+        }, 500);
     }
+
+    // jumpWindupAnimation() {
+    //     this.isJumping = true;
+
+    //     this.loadImage('img/2_character_pepe/3_jump/J-31.png');
+    //     setTimeout(() => {
+    //         this.loadImage('img/2_character_pepe/3_jump/J-32.png');
+    //     }, 40);
+    //     setTimeout(() => {
+    //         this.loadImage('img/2_character_pepe/3_jump/J-33.png');
+    //     }, 80);
+    //     setTimeout(() => {}, 120);
+    // }
+
+    // jumpEndAnimation() {
+    //     this.isJumping = false;
+    //     this.animationIsPlaying = true;
+
+    //     this.loadImage('img/2_character_pepe/3_jump/J-37.png');
+    //     setTimeout(() => {
+    //         this.loadImage('img/2_character_pepe/3_jump/J-38.png');
+    //     }, 40);
+    //     setTimeout(() => {
+    //         this.loadImage('img/2_character_pepe/3_jump/J-39.png');
+    //     }, 80);
+    //     setTimeout(() => {
+    //         this.animationIsPlaying = false;
+    //     }, 120);
+    // }
 }

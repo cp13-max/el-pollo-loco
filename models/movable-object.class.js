@@ -78,6 +78,20 @@ class MovableObject extends DrawableObject {
             this.currentImage++;
         }
     }
+    
+    playAnimationOnce(array, end) {
+        if (!gameIsPaused) {
+            if (this.start > end) {
+                return;
+            }
+            let i = this.start;
+            console.log(i);
+            console.log(this.start);
+            
+            this.img = this.imageCache[array[i]];
+            this.start++;
+        }
+    }
 
     applyGravity(acceleration) {
         setInterval(() => {
@@ -85,15 +99,13 @@ class MovableObject extends DrawableObject {
                 if (this.isAirborne() || this.speedY > 0) {
                     this.y -= this.speedY;
                     this.speedY -= acceleration;
-                    
-                    
                 }
             }
         }, 1000 / 25);
     }
 
     isFalling() {
-        return this.speedY < 0
+        return this.speedY < 0;
     }
 
     isAirborne() {
