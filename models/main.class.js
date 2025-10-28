@@ -116,31 +116,27 @@ class Main extends MovableObject {
 
     throwBack() {
         if (this.otherDirection) {
-            this.x += 0.5;
+            this.x += 1.5;
         } else {
-            this.x -= 0.5;
+            this.x -= 1.5;
         }
     }
 
     animate(level_end) {
         setInterval(() => {
+            this.world.camera_x = -this.x + 120;
             if (gameIsPaused) {
                 return;
             }
-
-            if (gameIsPaused) {
-                console.log('paused');
-                ;
+            if (this.isHurt()) {
+                return;
             }
-            
             if (this.world.keyboard.RIGHT && this.x < level_end) {
                 this.moveRight();
             }
             if (this.world.keyboard.LEFT && this.x > 120) {
                 this.moveLeft();
             }
-
-            this.world.camera_x = -this.x + 120;
         }, 1000 / 60);
     }
 
@@ -150,15 +146,18 @@ class Main extends MovableObject {
                 return;
             }
             if (this.isDead()) {
-                this.deathAnima();
+                this.deathAnimation();
                 return;
-            }
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
-                this.hasIdleTimeStarted = false;
             }
             if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
+                return;
             }
+
+            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
+                this.hasIdleTimeStarted = false;
+            }
+
             if (this.world.keyboard.SPACE & !this.isAirborne()) {
                 this.jump();
 
@@ -207,15 +206,15 @@ class Main extends MovableObject {
         let timespan = new Date().getTime() - this.idleTimeStart;
         timespan /= 1000;
 
-        if (timespan > 10) {
+        if (timespan > 7) {
             return 'long idle';
         }
-        if (timespan > 5) {
+        if (timespan > 1) {
             return 'idle';
         }
     }
 
-    deathAnima() {
+    deathAnimation() {
         this.playAnimation(this.IMAGES_DEAD);
         this.playAnimation(this.IMAGES_DEAD);
         this.damageThrowBack();

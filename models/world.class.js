@@ -96,16 +96,15 @@ class World {
                         this.main.resetSound(this.main.SOUND_DAMAGE);
                     }, 500);
                 }
-                
             }, 1000 / 60);
-            this.CollisionIntervalsBoss.push(interval)
+            this.CollisionIntervalsBoss.push(interval);
         });
     }
 
     enemyDies(enemy) {
         enemy.isAlive = false;
         enemy.clearStoppableIntervals();
-        enemy.deathAnima();
+        enemy.deathAnimation();
 
         if (enemy instanceof Chicken) {
             this.main.playSound(this.main.SOUND_JUMPING_ENEMY);
@@ -126,9 +125,9 @@ class World {
         this.coins.forEach((coin) => {
             if (this.main.isColliding(coin)) {
                 this.main.collectCoin();
-                let newCollectSound = new Audio('sounds/collect.mp3')
+                let newCollectSound = new Audio('sounds/collect.mp3');
                 if (musicIsmute) {
-                    newCollectSound.volume = 0
+                    newCollectSound.volume = 0;
                 }
                 this.main.playSound(newCollectSound);
                 this.coinBar.setBarPercentage(this.main.coins);
@@ -141,9 +140,9 @@ class World {
         this.bottles.forEach((bottle) => {
             if (this.main.isColliding(bottle)) {
                 this.main.collectBottle();
-                let newCollectSound = new Audio('sounds/collect.mp3')
+                let newCollectSound = new Audio('sounds/collect.mp3');
                 if (musicIsmute) {
-                    newCollectSound.volume = 0
+                    newCollectSound.volume = 0;
                 }
                 this.main.playSound(newCollectSound);
                 this.bottleBar.setBarPercentage(this.main.bottles);
@@ -396,24 +395,34 @@ class World {
     }
 
     resetEnemies() {
+        this.resetChicken();
+        this.resetBoss();
+    }
+
+    resetChicken() {
         this.enemies.forEach((enemy) => {
             enemy.clearStoppableIntervals();
         });
         this.enemies = [];
         this.CollisionIntervals.forEach(clearInterval);
         this.CollisionIntervals = [];
-        for (let index = 0; index < this.amountOfEnemies; index++) {
-            const coordinates = defaultEnemies[index];
-            this.enemies.push(new Chicken(coordinates[0], coordinates[1]));
-        }
+        this.enemies = [
+            new Chicken(540, 330),
+            new ChickenSmall(760, 350),
+            new Chicken(940, 330),
+            new ChickenSmall(1280, 350),
+            new Chicken(1780, 330),
+        ];
+    }
 
+    resetBoss() {
         this.boss.forEach((boss) => {
             boss.clearStoppableIntervals();
             boss.resetSound(boss.SOUND_CLUCKING);
         });
         this.boss = [];
-        this.CollisionIntervalsBoss.forEach(clearInterval)
-        
+        this.CollisionIntervalsBoss.forEach(clearInterval);
+
         this.boss.push(new Endboss(2880 - 300, 100));
         this.checkForEnemyCollision();
     }

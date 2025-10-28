@@ -29,16 +29,16 @@ class Chicken extends MovableObject {
 
     animate() {
         if (!gameIsPaused) {
-            this.moveAnima();
+            this.moveAnimation();
             this.autoMove(this.speed);
         }
     }
 
-    moveAnima() {
+    moveAnimation() {
         this.playAnimation(this.IMAGES_WALKING);
     }
 
-    deathAnima() {
+    deathAnimation() {
         this.playAnimation(this.IMAGES_DEAD);
     }
 

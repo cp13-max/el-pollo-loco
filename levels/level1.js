@@ -4,9 +4,9 @@ function setLevel1() {
    
         [
             new Chicken(540, 330),
-            new Chicken(760, 330),
+            new ChickenSmall(760, 350),
             new Chicken(940, 330),
-            new Chicken(1280, 330),
+            new ChickenSmall(1280, 350),
             new Chicken(1780, 330),
             
         ],

@@ -99,7 +99,7 @@ class Endboss extends MovableObject {
         }
     }
 
-    deathAnima() {
+    deathAnimation() {
         this.currentImage = 0;
         this.resetSound(this.SOUND_CLUCKING);
         this.clearStoppableIntervals();
