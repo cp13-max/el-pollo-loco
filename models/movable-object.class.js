@@ -20,6 +20,11 @@ class MovableObject extends DrawableObject {
         super();
     }
 
+    /**
+     * checks if an object is colliding with another object
+     * @param {object} object 
+     * @returns boolean
+     */
     isColliding(object) {
         return (
             this.x + this.width - this.offset.right > object.x + object.offset.left &&
@@ -29,6 +34,11 @@ class MovableObject extends DrawableObject {
         );
     }
 
+    /**
+     * checks if player character is jumping on enemies/colliding from above
+     * @param {object} object 
+     * @returns boolean
+     */
     isJumpingOn(object) {
         return (
             this.x + this.width - this.offset.right > object.x + object.offset.left &&
@@ -38,6 +48,9 @@ class MovableObject extends DrawableObject {
         );
     }
 
+    /**
+     * reduces life of player after taking a hit
+     */
     getHit() {
         if (!this.isHurt()) {
             this.health -= 20;
@@ -49,28 +62,49 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * updates coin counter/bar after coin is collected
+     */
     collectCoin() {
         this.coins += 10;
     }
 
+    /**
+     * updates bottle counter/bar after bottle is collected
+     */
     collectBottle() {
         this.bottles += 20;
     }
 
+    /**
+     * updates bottle counter/bar after bottle is thrown
+     */
     looseBottle() {
         this.bottles -= 20;
     }
 
+    /**
+     * checks if player is hurt(invincible time)
+     * @returns 
+     */
     isHurt() {
         let timespan = new Date().getTime() - this.lastHit;
         timespan = timespan / 1000;
         return timespan < 1;
     }
 
+    /**
+     * checks if player is dead
+     * @returns 
+     */
     isDead() {
         return this.health == 0;
     }
 
+    /**
+     * plays animation with images from an array
+     * @param {array} images 
+     */
     playAnimation(images) {
         if (!gameIsPaused) {
             let i = this.currentImage % images.length;
@@ -79,20 +113,10 @@ class MovableObject extends DrawableObject {
         }
     }
     
-    playAnimationOnce(array, end) {
-        if (!gameIsPaused) {
-            if (this.start > end) {
-                return;
-            }
-            let i = this.start;
-            console.log(i);
-            console.log(this.start);
-            
-            this.img = this.imageCache[array[i]];
-            this.start++;
-        }
-    }
-
+    /**
+     * creates gravity effect on player character
+     * @param {num} acceleration 
+     */
     applyGravity(acceleration) {
         setInterval(() => {
             if (!gameIsPaused) {
@@ -104,10 +128,18 @@ class MovableObject extends DrawableObject {
         }, 1000 / 25);
     }
 
+    /**
+     * checks if player is falling
+     * @returns 
+     */
     isFalling() {
         return this.speedY < 0;
     }
 
+    /**
+     * checks if player is in the air
+     * @returns 
+     */
     isAirborne() {
         if (!(this instanceof ThrowableBottle)) {
             return this.y < 135;
@@ -116,21 +148,37 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * changes horizontal position(x) by a set amount
+     * @param {num} speed 
+     */
     autoMove(speed) {
         // return setInterval(() => {
         this.x -= speed;
         // }, 1000/60);
     }
 
+    /**
+     * plays a given sound/music
+     * @param {string} sound 
+     */
     playSound(sound) {
         sound.play();
     }
 
+    /**
+     * resets a given sound/music
+     * @param {string} sound 
+     */
     resetSound(sound) {
         sound.pause();
         sound.currentTime = 0;
     }
 
+    /**
+     * pauses a given sound/music
+     * @param {string} sound 
+     */
     pauseSound(sound) {
         sound.pause();
     }

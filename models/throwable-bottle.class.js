@@ -39,6 +39,10 @@ class ThrowableBottle extends MovableObject {
         
     }
 
+    /**
+     * movement and gravity for this object(thrown bottle)
+     * @param {*} direction 
+     */
     motion(direction) {
         this.posX = setInterval(() => {
             if (!gameIsPaused) {
@@ -54,6 +58,10 @@ class ThrowableBottle extends MovableObject {
     }}, 1000/60);
     }
 
+    /**
+     * move animation for this object
+     * @param {*} direction 
+     */
     throwBottle(direction) {
         
         this.throwAnima = setInterval(() => {
@@ -64,6 +72,9 @@ class ThrowableBottle extends MovableObject {
         this.motion(direction);
     }
 
+    /**
+     * when thrown bottle breaks(hit enemy), movement is stopped and splash animation is played
+     */
     breakBottle() {
         if (!this.isBottleBroken) {
             clearInterval(this.throwAnima)
@@ -75,10 +86,16 @@ class ThrowableBottle extends MovableObject {
         }
     }
 
+    /**
+     * moves this object right along x-axis by set amount
+     */
     autoMoveRight() {
         this.x += this.speed;
     }
 
+    /**
+     * moves this object left along x-axis by set amount
+     */
     autoMoveLeft() {
         this.x -= this.speed;
     }

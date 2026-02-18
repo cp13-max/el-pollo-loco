@@ -27,7 +27,9 @@ let keyboard;
 const mediaQueryMatch = window.matchMedia('(orientation: landscape) and (max-width: 600px) and (max-height: 500px)');
 
 /**
- *
+ * creates a script and adds it to head
+ * @param {string} src src of the script
+ * @returns 
  */
 function loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -42,6 +44,9 @@ function loadScript(src) {
     });
 }
 
+/**
+ * creates mutiple scripts and load them in order
+ */
 async function loadAllScripts() {
     for (let index = 0; index < scripts.length; index++) {
         const src = scripts[index];
@@ -51,12 +56,18 @@ async function loadAllScripts() {
     keyboard = new Keyboard();
 }
 
+/**
+ * shows load animation while all scripts are created/loaded
+ */
 async function loadGame() {
     ToggleLoadingScreen();
     await loadAllScripts();
     ToggleLoadingScreen();
 }
 
+/**
+ * toggles load screen/animation on/off 
+ */
 function ToggleLoadingScreen() {
     document.getElementById('loading-screen').classList.toggle('d-none');
 }

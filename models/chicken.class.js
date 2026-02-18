@@ -27,6 +27,9 @@ class Chicken extends MovableObject {
         this.setStoppableInterval(this.animate.bind(this), 100);
     }
 
+    /**
+     * gives this object automatic movement and move animations
+     */
     animate() {
         if (!gameIsPaused) {
             this.moveAnimation();
@@ -34,10 +37,16 @@ class Chicken extends MovableObject {
         }
     }
 
+    /**
+     * animation for movement
+     */
     moveAnimation() {
         this.playAnimation(this.IMAGES_WALKING);
     }
 
+    /**
+     * animation for death/dying
+     */
     deathAnimation() {
         this.playAnimation(this.IMAGES_DEAD);
     }

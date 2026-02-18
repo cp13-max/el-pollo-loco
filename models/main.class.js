@@ -107,6 +107,9 @@ class Main extends MovableObject {
         this.movementAnimas = this.movementAnimations();
     }
 
+    /**
+     * player character is pushed back(x-axis) after hit is taken
+     */
     damageThrowBack() {
         let throwBack = setInterval(() => {
             this.throwBack();
@@ -116,6 +119,9 @@ class Main extends MovableObject {
         }, 500);
     }
 
+    /**
+     * the specific distance hero is pushed back after taken hit
+     */
     throwBack() {
         if (this.otherDirection) {
             this.x += 1.5;
@@ -124,6 +130,10 @@ class Main extends MovableObject {
         }
     }
 
+    /**
+     * moves the character along x-axis with move animations and sets the camera
+     * @param {num} level_end 
+     */
     animate(level_end) {
         setInterval(() => {
             this.world.camera_x = -this.x + 120;
@@ -142,6 +152,10 @@ class Main extends MovableObject {
         }, 1000 / 60);
     }
 
+    /**
+     * plays death/jump/hurt/idle animations when condition is met
+     * @returns 
+     */
     movementAnimations() {
         return setInterval(() => {
             if (gameIsPaused) {
@@ -177,6 +191,9 @@ class Main extends MovableObject {
         }, 100);
     }
 
+    /**
+     * specific jump animation
+     */
     playJumpAnimation() {
         if (this.speedY > 5) {
             this.loadImage('img/2_character_pepe/3_jump/J-34.png');
@@ -191,6 +208,9 @@ class Main extends MovableObject {
         }
     }
 
+    /**
+     * checks for idle condiion
+     */
     checkForIdleStatus() {
         if (this.checkForInput()) {
             this.resetIdleTime();
@@ -200,6 +220,10 @@ class Main extends MovableObject {
         }
     }
 
+    /**
+     * checks for key input or if hero is airborne/takes hit
+     * @returns 
+     */
     checkForInput() {
         if (
             this.world.keyboard.RIGHT ||
@@ -213,10 +237,18 @@ class Main extends MovableObject {
         }
     }
 
+    /**
+     * resets counter for idle time
+     */
     resetIdleTime() {
         this.hasIdleTimeStarted = false;
     }
 
+    /**
+     * checks if there are no key inputs or if hero is not airborne/does not take a hit
+     * result is needed for idle animation
+     * @returns 
+     */
     checkForNoInput() {
         if (
             !this.world.keyboard.RIGHT &
@@ -230,6 +262,9 @@ class Main extends MovableObject {
         }
     }
 
+    /**
+     * checks idle time and plays idle animations if idle time surpasses certain thesholds
+     */
     playIdleAnimation() {
         if (!this.hasIdleTimeStarted) {
             this.idleTimeStart = new Date().getTime();
@@ -244,6 +279,10 @@ class Main extends MovableObject {
         }
     }
 
+    /**
+     * decides whether idle animation should be played
+     * @returns 
+     */
     isIdle() {
         let timespan = new Date().getTime() - this.idleTimeStart;
         timespan /= 1000;
@@ -255,6 +294,9 @@ class Main extends MovableObject {
         }
     }
 
+    /**
+     * plays death animation of the hero
+     */
     deathAnimation() {
         this.playAnimation(this.IMAGES_DEAD);
         this.playAnimation(this.IMAGES_DEAD);
@@ -266,16 +308,25 @@ class Main extends MovableObject {
         }, 1000);
     }
 
+    /**
+     * moves the hero right along x-axis
+     */
     moveRight() {
         this.x += this.speed;
         this.otherDirection = false;
     }
 
+    /**
+     * moves the hero left along x-axis
+     */
     moveLeft() {
         this.x -= this.speed;
         this.otherDirection = true;
     }
 
+    /**
+     * initiates heroes jump
+     */
     jump() {
         this.speedY = 30;
         this.playSound(this.SOUND_JUMPING);

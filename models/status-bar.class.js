@@ -15,12 +15,20 @@ class StatusBar extends DrawableObject {
         this.height = 70;
     }
 
+    /**
+     * updates bar status
+     * @param {num} percentages 
+     */
     setBarPercentage(percentages) {
         this.percentages = percentages;
         let path = this.IMAGES[this.setImage()];
         this.img = this.imageCache[path];
     }
 
+    /**
+     * sets the specific image for the corresponding bar status
+     * @returns 
+     */
     setImage() {
         if (this.percentages == 100) {
             return 0;
