@@ -22,7 +22,7 @@ class Chicken extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
         this.x = x;
         this.y = y;
-        this.speed = 0; // 5 + Math.random() * 10
+        this.speed = 7 + Math.random() * 10; // 5 + Math.random() * 10
         this.saveDefaultStatus(defaultEnemies, x, y);
         this.setStoppableInterval(this.animate.bind(this), 100);
     }
