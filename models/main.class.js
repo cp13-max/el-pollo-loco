@@ -161,22 +161,9 @@ class Main extends MovableObject {
             }
 
             if (this.isAirborne()) {
-                if (this.speedY > 5) {
-                    this.loadImage('img/2_character_pepe/3_jump/J-34.png');
-                }
-                if (this.speedY < 5 && this.speedY > -5) {
-                    this.currentImage++;
-                    this.loadImage('img/2_character_pepe/3_jump/J-35.png');
-                }
-                if (this.speedY < -5 && this.speedY > -30) {
-                    this.currentImage++;
-                    this.loadImage('img/2_character_pepe/3_jump/J-36.png');
-                }
+                this.playJumpAnimation()
             }
-            
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
-                this.hasIdleTimeStarted = false;
-            }
+
             if (this.world.keyboard.RIGHT & !this.isAirborne() || this.world.keyboard.LEFT & !this.isAirborne()) {
                 this.playSound(this.SOUND_WALKING);
                 this.playAnimation(this.IMAGES_WALKING);
@@ -186,33 +173,80 @@ class Main extends MovableObject {
                 this.resetSound(this.SOUND_WALKING);
             }
 
-            if (
-                !this.world.keyboard.RIGHT &
-                !this.world.keyboard.LEFT &
-                !this.world.keyboard.SPACE &
-                !this.isAirborne() &
-                !this.isHurt()
-            ) {
-                if (this.isIdle() == 'long idle') {
-                    this.playAnimation(this.IMAGES_LONG_IDLE);
-                } else if (this.isIdle() == 'idle') {
-                    this.playAnimation(this.IMAGES_IDLE);
-                } else {
-                    this.loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
-                }
-
-                if (!this.hasIdleTimeStarted) {
-                    this.idleTimeStart = new Date().getTime();
-                }
-                this.hasIdleTimeStarted = true;
-            }
+            this.checkForIdleStatus();
         }, 100);
+    }
+
+    playJumpAnimation() {
+        if (this.speedY > 5) {
+            this.loadImage('img/2_character_pepe/3_jump/J-34.png');
+        }
+        if (this.speedY < 5 && this.speedY > -5) {
+            this.currentImage++;
+            this.loadImage('img/2_character_pepe/3_jump/J-35.png');
+        }
+        if (this.speedY < -5 && this.speedY > -30) {
+            this.currentImage++;
+            this.loadImage('img/2_character_pepe/3_jump/J-36.png');
+        }
+    }
+
+    checkForIdleStatus() {
+        if (this.checkForInput()) {
+            this.resetIdleTime();
+        }
+        if (this.checkForNoInput()) {
+            this.playIdleAnimation();
+        }
+    }
+
+    checkForInput() {
+        if (
+            this.world.keyboard.RIGHT ||
+            this.world.keyboard.LEFT ||
+            this.world.keyboard.SPACE ||
+            this.world.keyboard.F ||
+            this.isAirborne() ||
+            this.isHurt()
+        ) {
+            return true;
+        }
+    }
+
+    resetIdleTime() {
+        this.hasIdleTimeStarted = false;
+    }
+
+    checkForNoInput() {
+        if (
+            !this.world.keyboard.RIGHT &
+            !this.world.keyboard.LEFT &
+            !this.world.keyboard.SPACE &
+            !this.world.keyboard.F &
+            !this.isAirborne() &
+            !this.isHurt()
+        ) {
+            return true;
+        }
+    }
+
+    playIdleAnimation() {
+        if (!this.hasIdleTimeStarted) {
+            this.idleTimeStart = new Date().getTime();
+        }
+        this.hasIdleTimeStarted = true;
+        if (this.isIdle() == 'long idle') {
+            this.playAnimation(this.IMAGES_LONG_IDLE);
+        } else if (this.isIdle() == 'idle') {
+            this.playAnimation(this.IMAGES_IDLE);
+        } else {
+            this.loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
+        }
     }
 
     isIdle() {
         let timespan = new Date().getTime() - this.idleTimeStart;
         timespan /= 1000;
-
         if (timespan > 7) {
             return 'long idle';
         }

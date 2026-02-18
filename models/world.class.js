@@ -39,6 +39,12 @@ class World {
         this.checkForEnemyCollision();
     }
 
+    /**
+     * an interval that checks for players position,
+     * so bosses animation can be played if certain threshold is crossed.
+     * clears itself afterwards.
+     * @returns
+     */
     HeroPositionCheck() {
         return setInterval(() => {
             if (this.main.x > 2009) {
@@ -48,6 +54,11 @@ class World {
         }, 1000 / 60);
     }
 
+    /**
+     * an interval that checks if bottlethrowbutton(F) is pressed.
+     * in that case bottle is thrown.
+     * @returns
+     */
     bottleCheck() {
         return setInterval(() => {
             if (this.keyboard.F) {
@@ -63,6 +74,10 @@ class World {
         }, 100);
     }
 
+    /**
+     * an interval that checks if player collides with the two stage items (bottle, coin)
+     * @returns
+     */
     itemCollisionCheck() {
         return setInterval(() => {
             this.checkHeroCoinCollision();
@@ -70,6 +85,10 @@ class World {
         }, 1000 / 60);
     }
 
+    /**
+     * for each enemy an interval is set, that checks if player collides with that enemy.
+     * either enemy dies or player takes a hit.
+     */
     checkForEnemyCollision() {
         this.enemies.forEach((enemy) => {
             let interval = setInterval(() => {
@@ -101,6 +120,11 @@ class World {
         });
     }
 
+    /**
+     * plays deathanimations and removes defeated enemies from game.
+     * in case of boss game ends in victory
+     * @param {object} enemy
+     */
     enemyDies(enemy) {
         enemy.isAlive = false;
         enemy.clearStoppableIntervals();
@@ -121,6 +145,10 @@ class World {
         }
     }
 
+    /**
+     * checks if player collides with a coin.
+     * in that case coin is collected and removed from stage
+     */
     checkHeroCoinCollision() {
         this.coins.forEach((coin) => {
             if (this.main.isColliding(coin)) {
@@ -136,6 +164,10 @@ class World {
         });
     }
 
+    /**
+     * checks if player collides with bottles.
+     * in that case bottle is collected and removed from stage
+     */
     checkHeroBottleCollision() {
         this.bottles.forEach((bottle) => {
             if (this.main.isColliding(bottle)) {
@@ -151,11 +183,19 @@ class World {
         });
     }
 
+    /**
+     * removes objects from their corresponding arrays
+     * @param {array} array
+     * @param {object} object
+     */
     removeObjectFromGame(array, object) {
         let index = array.indexOf(object);
         array.splice(index, 1);
     }
 
+    /**
+     * temporarly disables the function 'bottleCheck()', so that bottles cant be thrown in quick succsession
+     */
     temporarilyDisableBottleCheck() {
         clearInterval(this.checkBottles);
         setTimeout(() => {
@@ -163,6 +203,9 @@ class World {
         }, 500);
     }
 
+    /**
+     * calls multiple functions when player is hit 
+     */
     heroTakesHit() {
         this.main.getHit();
         this.main.hasIdleTimeStarted = false;
@@ -176,6 +219,10 @@ class World {
         }
     }
 
+    /**
+     * plays sound and animation of an breaking bottle after it collided with enemy and removes it afterwards from game
+     * @param {object} bottle 
+     */
     bottleBreaks(bottle) {
         this.main.playSound(this.main.SOUND_BOTTLE_BREAK);
         setTimeout(() => {
@@ -190,10 +237,17 @@ class World {
         }, 360);
     }
 
+    /**
+     * checks if the palyer has bottles
+     * @returns 
+     */
     heroHasBottles() {
         return this.bottleBar.percentages > 0;
     }
 
+    /**
+     * creates a new bottle(object) and throws it in current direction
+     */
     throwBottle() {
         let newBottle = new ThrowableBottle(this.main.x, this.main.y);
         this.throwableBottles.push(newBottle);
@@ -203,6 +257,10 @@ class World {
         this.bottleBar.setBarPercentage(this.main.bottles);
     }
 
+    /**
+     * sets for each enemy an inteval which checks if thrown bottle is colliding with them
+     * @param {object} bottle 
+     */
     checkForBottleEnemyCollision(bottle) {
         let interval = setInterval(() => {
             this.enemies.forEach((enemy) => {
@@ -227,6 +285,10 @@ class World {
         }, 1000 / 60);
     }
 
+    /**
+     * sets objects in level (enemies, items and backgroundobjects)
+     * @param {object} level 
+     */
     setLevel(level) {
         this.enemies = level.enemies;
         this.boss = level.endboss;
@@ -241,6 +303,9 @@ class World {
         this.level_length = level.level_end;
     }
 
+    /**
+     * creates the player character and sets world music
+     */
     setWorld() {
         this.main = new Main(this.level_length);
         this.main.world = this;
@@ -248,6 +313,9 @@ class World {
         this.GAME_MUSIC.play();
     }
 
+    /**
+     * mutes all music in game
+     */
     muteAllMusic() {
         this.GAME_MUSIC.volume = 0;
         this.main.SOUND_VICTORY.volume = 0;
@@ -261,6 +329,9 @@ class World {
         this.boss[0].SOUND_CLUCKING.volume = 0;
     }
 
+    /**
+     * sets(unmutes) all music in game to a certain value
+     */
     unMuteAllMusic() {
         this.GAME_MUSIC.volume = 0.1;
         this.main.SOUND_VICTORY.volume = 0.5;
@@ -274,6 +345,9 @@ class World {
         this.boss[0].SOUND_CLUCKING.volume = 0.5;
     }
 
+    /**
+     * draws all objects in the game
+     */
     drawWorld() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -299,6 +373,10 @@ class World {
         });
     }
 
+    /**
+     * draws a single specific object
+     * @param {object} object 
+     */
     addToMap(object) {
         if (object instanceof HealthBar || object instanceof CoinBar || object instanceof BottleBar) {
             object.x = -this.camera_x;
@@ -314,6 +392,10 @@ class World {
         }
     }
 
+    /**
+     * draws all objects from a specific array (e.g clouds)
+     * @param {array} objects 
+     */
     addObjectsToMap(objects) {
         try {
             objects.forEach((e) => {
@@ -324,6 +406,10 @@ class World {
         }
     }
 
+    /**
+     * changes the direction of all objects in game
+     * @param {object} object 
+     */
     flipImage(object) {
         this.ctx.save();
         this.ctx.translate(object.width, 0);
@@ -331,11 +417,18 @@ class World {
         object.x = object.x * -1;
     }
 
+    /**
+     * changes the direction all objects in game to normal
+     * @param {object} object 
+     */
     reflipImage(object) {
         object.x = object.x * -1;
         this.ctx.restore();
     }
 
+    /**
+     * resets the game to default status
+     */
     resetGame() {
         this.resetAllObjects();
         this.resetSounds();
@@ -345,6 +438,9 @@ class World {
         gameIsOver = false;
     }
 
+    /**
+     * resets all objects to default status
+     */
     resetAllObjects() {
         this.resetObjects('enemies');
         this.resetObjects('bottles');
@@ -355,12 +451,19 @@ class World {
         this.checkHeroPosition = this.HeroPositionCheck();
     }
 
+    /**
+     * resets the game music
+     */
     resetSounds() {
         this.main.resetSound(this.main.SOUND_VICTORY);
         this.main.resetSound(this.GAME_MUSIC);
         this.main.playSound(this.GAME_MUSIC);
     }
 
+    /**
+     * resets single objects/all objects from an array to default status
+     * @param {array} objects 
+     */
     resetObjects(objects) {
         switch (objects) {
             case 'enemies':
@@ -387,6 +490,9 @@ class World {
         }
     }
 
+    /**
+     * removes game over screen if game is reseted
+     */
     removeGameOverScreen() {
         document.getElementById('start-screen').style.display = 'none';
         document.getElementById('start-screen').src = 'img/9_intro_outro_screens/game_over/game over!.png';
@@ -394,11 +500,17 @@ class World {
         document.getElementById('restart-button').style.display = 'none';
     }
 
+    /**
+     * reset all enemies to default status
+     */
     resetEnemies() {
         this.resetChicken();
         this.resetBoss();
     }
 
+    /**
+     * resets all non-boss enemies to default status
+     */
     resetChicken() {
         this.enemies.forEach((enemy) => {
             enemy.clearStoppableIntervals();
@@ -415,6 +527,9 @@ class World {
         ];
     }
 
+    /**
+     * resets the boss to default status
+     */
     resetBoss() {
         this.boss.forEach((boss) => {
             boss.clearStoppableIntervals();
@@ -427,6 +542,9 @@ class World {
         this.checkForEnemyCollision();
     }
 
+    /**
+     * resets all bottles(items) 
+     */
     resetBottles() {
         this.bottles = [];
         for (let index = 0; index < this.amountOfBottles; index++) {
@@ -435,6 +553,9 @@ class World {
         }
     }
 
+    /**
+     * resets all coins(items)
+     */
     resetCoins() {
         this.coins = [];
         for (let index = 0; index < this.amountOfCoins; index++) {
@@ -443,6 +564,9 @@ class World {
         }
     }
 
+    /**
+     * reset all clouds(backgroundobjects)
+     */
     resetClouds() {
         this.clouds = [];
         for (let index = 0; index < this.amountOfClouds; index++) {
@@ -451,6 +575,9 @@ class World {
         }
     }
 
+    /**
+     * resets the plyer character
+     */
     resetHero() {
         this.main.x = 120;
         this.main.y = 135;
@@ -465,6 +592,9 @@ class World {
         this.main.movementAnimas = this.main.movementAnimations();
     }
 
+    /**
+     * loads game over screen if player dies
+     */
     loadGameOverScreen() {
         document.getElementById('start-screen').style.display = 'inline';
         document.getElementById('start-screen').src = 'img/9_intro_outro_screens/game_over/game over!.png';
@@ -472,6 +602,9 @@ class World {
         document.getElementById('restart-button').style.display = 'inline';
     }
 
+    /**
+     * loads victory screen if boss dies
+     */
     loadVictoryScreen() {
         this.main.resetSound(this.GAME_MUSIC);
         this.main.playSound(this.main.SOUND_VICTORY);

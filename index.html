@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -7,7 +7,7 @@
         <link rel="icon" type="image/x-icon" href="./img/downloaded/cactus.png" />
         <link rel="stylesheet" href="style.css" />
         <script src="./js/generic.js"></script>
-        <script src="./models/drawable-objects.class.js"></script>
+        <!-- <script src="./models/drawable-objects.class.js"></script>
         <script src="./models/movable-object.class.js"></script>
         <script src="./models/status-bar.class.js"></script>
         <script src="./models/health-status.class.js"></script>
@@ -25,19 +25,20 @@
         <script src="./models/keyboard.class.js"></script>
         <script src="./models/level.class.js"></script>
         <script src="./levels/level1.js"></script>
-        <script src="./models/world.class.js"></script>
+        <script src="./models/world.class.js"></script> -->
         <script src="./game.js"></script>
     </head>
     <body onload="init()">
+        <div id="loading-screen" class="loading-screen d-none">
+            <div class="loading-text">Loading<span class="dots"></span></div>
+            
+        </div>
         <div class="game-div" id="game-div">
             <h1>El Pollo Loco</h1>
             <div id="canvas-container" class="canvas-container">
-                <div class="rotate-notice">
-                    Please put the game in Landscape mode
-                </div>
+                <div class="rotate-notice">Please put the game in Landscape mode</div>
                 <canvas id="canvas"></canvas>
                 <div id="start-screen-container">
-                    
                     <img
                         id="start-screen"
                         class="start-screen"
@@ -45,25 +46,29 @@
                         alt=""
                     />
                     <div class="icon-bar">
-                        
                         <img
-                        id="start-button"
-                        onclick="startGame()"
-                        class="start-button"
-                        src="./img/downloaded/real-start-btn.png"
-                        alt=""
-                    />
-                    <img
-                        id="play-music-button"
-                        onclick="muteMusic()"
-                        class="play-music-button"
-                        src="./img/downloaded/speaker-icon.png"
-                        alt=""
-                    />
-                    <img id="return-to-screen-button" class="return-to-screen-button"
-                        onclick="returnToScreen()" src="./img/downloaded/return-to-screen.png" alt="">
+                            id="start-button"
+                            onclick="startGame()"
+                            class="start-button"
+                            src="./img/downloaded/real-start-btn.png"
+                            alt=""
+                        />
+                        <img
+                            id="play-music-button"
+                            onclick="muteMusic()"
+                            class="play-music-button"
+                            src="./img/downloaded/speaker-icon.png"
+                            alt=""
+                        />
+                        <img
+                            id="return-to-screen-button"
+                            class="return-to-screen-button"
+                            onclick="returnToScreen()"
+                            src="./img/downloaded/return-to-screen.png"
+                            alt=""
+                        />
                     </div>
-                    
+
                     <img
                         id="restart-button"
                         onclick="restartGame()"
@@ -71,17 +76,39 @@
                         src="./img/downloaded/restart-button.png"
                         alt=""
                     />
-                    <a href="./impressum.html" target="_blank"><img class="legal-notice" src="./img/downloaded/legal-notice.jpg" alt=""></a>
-                    <img onclick="enterFullScreen()" class="full-screen" src="./img/downloaded/full-screen-2.png" alt="" />
-                    
+                    <a href="./impressum.html" target="_blank"
+                        ><img class="legal-notice" src="./img/downloaded/legal-notice.jpg" alt=""
+                    /></a>
+                    <img
+                        onclick="enterFullScreen()"
+                        class="full-screen"
+                        src="./img/downloaded/full-screen-2.png"
+                        alt=""
+                    />
+
                     <div id="mobile-bar" class="mobile-bar">
                         <div class="mobile-btn-left">
                             <img id="btn-mobile-left" class="btn-mobile" src="./img/downloaded/arrow-btn.png" alt="" />
-                            <img id="btn-mobile-right" class="btn-mobile turn-right" src="./img/downloaded/arrow-btn.png" alt="" />
+                            <img
+                                id="btn-mobile-right"
+                                class="btn-mobile turn-right"
+                                src="./img/downloaded/arrow-btn.png"
+                                alt=""
+                            />
                         </div>
                         <div class="mobile-btn-right">
-                            <img id="btn-mobile-jump" class="btn-mobile turn-up" src="./img/downloaded/arrow-btn.png" alt="" />
-                            <img id="btn-mobile-throw" class="btn-mobile bottle-icon" src="./img/downloaded/bottle-icon.png" alt="" />
+                            <img
+                                id="btn-mobile-jump"
+                                class="btn-mobile turn-up"
+                                src="./img/downloaded/arrow-btn.png"
+                                alt=""
+                            />
+                            <img
+                                id="btn-mobile-throw"
+                                class="btn-mobile bottle-icon"
+                                src="./img/downloaded/bottle-icon.png"
+                                alt=""
+                            />
                         </div>
                     </div>
                 </div>
@@ -99,7 +126,6 @@
                 </div>
                 <div>Jump on enemies to kill. <br />Collect coins and bottles. <br />Kill Boss only with bottles.</div>
             </div>
-            
         </div>
     </body>
 </html>

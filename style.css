@@ -128,7 +128,7 @@ canvas {
         contrast(89%);
 }
 
-.legal-notice{
+.legal-notice {
     height: 40px;
     width: 40px;
     position: absolute;
@@ -138,7 +138,7 @@ canvas {
     cursor: pointer;
 }
 
-.legal-notice-container{
+.legal-notice-container {
     max-width: 1000px;
 }
 
@@ -192,6 +192,57 @@ h1 {
     visibility: hidden;
 }
 
+.loading-screen {
+    position: fixed;
+    inset: 0 0 0 0;
+    background-color: rgb(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.loading-text {
+    color: white;
+    font-size: 36px;
+}
+
+.dots {
+    margin-left: 8px;
+    letter-spacing: 10px;
+    color: white;
+    font-size: 36px;
+    position: absolute;
+    
+}
+
+.dots::after {
+    content: '';
+    animation: dotanimation 1.4s infinite 0s normal;
+}
+
+.d-none{
+    display: none;
+}
+
+@keyframes dotanimation {
+    0% {
+        content: '';
+    }
+    25% {
+        content: '.';
+    }
+    50% {
+        content: '..';
+    }
+    75% {
+        content: '...';
+    }
+    100% {
+        content: '';
+    }
+}
+
 @media screen and (max-width: 720px) {
     .canvas-container {
         width: 100%;
@@ -207,6 +258,12 @@ h1 {
 
     .legal-notice {
         bottom: 15%;
+    }
+}
+
+@media screen and (max-width: 720px) and (pointer: coarse) and (orientation: portrait) {
+    .rotate-notice {
+        visibility: visible;
     }
 }
 
@@ -250,11 +307,5 @@ h1 {
     .mobile-bar {
         margin: 0 0;
         width: 100%;
-    }
-}
-
-@media screen and (orientation: portrait) and (max-width: 500px) and (max-height: 500px) {
-    .rotate-notice {
-        visibility: visible;
     }
 }
