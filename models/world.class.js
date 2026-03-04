@@ -22,6 +22,7 @@ class World {
     healthBar = new HealthBar();
     coinBar = new CoinBar();
     bottleBar = new BottleBar();
+    bossHealth = [];
     checkItemCollision;
     checkBottles;
     checkHeroPosition;
@@ -63,7 +64,7 @@ class World {
         return setInterval(() => {
             if (this.keyboard.F) {
                 if (this.heroHasBottles()) {
-                    this.main.playSound(this.main.SOUND_SWOOSH);
+                    this.main.playSound(this.main.SOUND_SWOOSH, 1);
                     setTimeout(() => {
                         this.main.resetSound(this.main.SOUND_SWOOSH);
                     }, 400);
@@ -97,7 +98,7 @@ class World {
                         this.enemyDies(enemy);
                     } else {
                         this.heroTakesHit();
-                        this.main.playSound(this.main.SOUND_DAMAGE);
+                        this.main.playSound(this.main.SOUND_DAMAGE, 1);
                         setTimeout(() => {
                             this.main.resetSound(this.main.SOUND_DAMAGE);
                         }, 500);
@@ -110,7 +111,7 @@ class World {
             let interval = setInterval(() => {
                 if (this.main.isColliding(boss)) {
                     this.heroTakesHit();
-                    this.main.playSound(this.main.SOUND_DAMAGE);
+                    this.main.playSound(this.main.SOUND_DAMAGE, 1);
                     setTimeout(() => {
                         this.main.resetSound(this.main.SOUND_DAMAGE);
                     }, 500);
@@ -131,7 +132,7 @@ class World {
         enemy.deathAnimation();
 
         if (enemy instanceof Chicken) {
-            this.main.playSound(this.main.SOUND_JUMPING_ENEMY);
+            this.main.playSound(this.main.SOUND_JUMPING_ENEMY, 1);
             setTimeout(() => {
                 this.removeObjectFromGame(this.enemies, enemy);
             }, 500);
@@ -157,7 +158,7 @@ class World {
                 if (musicIsmute) {
                     newCollectSound.volume = 0;
                 }
-                this.main.playSound(newCollectSound);
+                this.main.playSound(newCollectSound, 1);
                 this.coinBar.setBarPercentage(this.main.coins);
                 this.removeObjectFromGame(this.coins, coin);
             }
@@ -176,7 +177,7 @@ class World {
                 if (musicIsmute) {
                     newCollectSound.volume = 0;
                 }
-                this.main.playSound(newCollectSound);
+                this.main.playSound(newCollectSound, 1);
                 this.bottleBar.setBarPercentage(this.main.bottles);
                 this.removeObjectFromGame(this.bottles, bottle);
             }
@@ -224,7 +225,7 @@ class World {
      * @param {object} bottle 
      */
     bottleBreaks(bottle) {
-        this.main.playSound(this.main.SOUND_BOTTLE_BREAK);
+        this.main.playSound(this.main.SOUND_BOTTLE_BREAK, 1);
         setTimeout(() => {
             this.main.resetSound(this.main.SOUND_BOTTLE_BREAK);
         }, 300);
@@ -275,10 +276,12 @@ class World {
                 if (bottle.isColliding(boss)) {
                     this.bottleBreaks(bottle);
                     clearInterval(interval);
-                    boss.hitsTaken++;
+                    boss.life -= 20;
+                    this.bossHealth[0].setBarPercentage(boss.life)
 
-                    if (boss.hitsTaken >= 3) {
+                    if (boss.life <= 0) {
                         this.enemyDies(boss);
+                        this.bossHealth = []
                     }
                 }
             });
@@ -309,6 +312,7 @@ class World {
     setWorld() {
         this.main = new Main(this.level_length);
         this.main.world = this;
+        this.bossHealth.push(new BossHealth())
         this.GAME_MUSIC.loop = true;
         this.GAME_MUSIC.play();
     }
@@ -317,6 +321,7 @@ class World {
      * mutes all music in game
      */
     muteAllMusic() {
+        // musicIsmute = true
         this.GAME_MUSIC.volume = 0;
         this.main.SOUND_VICTORY.volume = 0;
         this.main.SOUND_WALKING.volume = 0;
@@ -326,7 +331,10 @@ class World {
         this.main.SOUND_BOTTLE_BREAK.volume = 0;
         this.main.SOUND_COLLECT.volume = 0;
         this.main.SOUND_SWOOSH.volume = 0;
-        this.boss[0].SOUND_CLUCKING.volume = 0;
+        if (this.boss[0]) {
+            this.boss[0].SOUND_CLUCKING.volume = 0;
+        }
+        
     }
 
     /**
@@ -342,7 +350,10 @@ class World {
         this.main.SOUND_BOTTLE_BREAK.volume = 1;
         this.main.SOUND_COLLECT.volume = 1;
         this.main.SOUND_SWOOSH.volume = 1;
-        this.boss[0].SOUND_CLUCKING.volume = 0.5;
+        if (this.boss[0]) {
+            this.boss[0].SOUND_CLUCKING.volume = 0.5;
+        }
+        
     }
 
     /**
@@ -362,6 +373,7 @@ class World {
         this.addObjectsToMap(this.throwableBottles);
         this.addObjectsToMap(this.enemies);
         this.addObjectsToMap(this.boss);
+        this.addObjectsToMap(this.bossHealth);
         this.addObjectsToMap(this.bottles);
         this.addObjectsToMap(this.coins);
 
@@ -380,6 +392,10 @@ class World {
     addToMap(object) {
         if (object instanceof HealthBar || object instanceof CoinBar || object instanceof BottleBar) {
             object.x = -this.camera_x;
+        }
+        if (object instanceof BossHealth) {
+            object.x = this.boss[0].x;
+            object.y = this.boss[0].y - 15;
         }
         if (object.otherDirection) {
             this.flipImage(object);
@@ -426,7 +442,7 @@ class World {
         this.ctx.restore();
     }
 
-    /**
+    /*
      * resets the game to default status
      */
     resetGame() {
@@ -447,6 +463,7 @@ class World {
         this.resetObjects('coins');
         this.resetObjects('hero');
         this.resetObjects('clouds');
+        this.bossHealth.push(new BossHealth())
         clearInterval(this.checkHeroPosition);
         this.checkHeroPosition = this.HeroPositionCheck();
     }
@@ -457,7 +474,7 @@ class World {
     resetSounds() {
         this.main.resetSound(this.main.SOUND_VICTORY);
         this.main.resetSound(this.GAME_MUSIC);
-        this.main.playSound(this.GAME_MUSIC);
+        this.main.playSound(this.GAME_MUSIC, 0.1);
     }
 
     /**
@@ -607,7 +624,7 @@ class World {
      */
     loadVictoryScreen() {
         this.main.resetSound(this.GAME_MUSIC);
-        this.main.playSound(this.main.SOUND_VICTORY);
+        this.main.playSound(this.main.SOUND_VICTORY, 0.5);
         document.getElementById('start-screen').style.display = 'inline';
         document.getElementById('start-screen').src = 'img/9_intro_outro_screens/win/won_2.png';
 

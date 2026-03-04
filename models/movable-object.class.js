@@ -162,7 +162,12 @@ class MovableObject extends DrawableObject {
      * plays a given sound/music
      * @param {string} sound 
      */
-    playSound(sound) {
+    playSound(sound, volume) {
+        if (musicIsmute) {
+            sound.volume = 0
+        } else {
+            sound.volume = volume
+        }
         sound.play();
     }
 

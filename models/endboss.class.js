@@ -47,7 +47,7 @@ class Endboss extends MovableObject {
         bottom: 15,
         left: 5,
     };
-    hitsTaken = 0;
+    life = 100;
     con;
     constructor(x, y) {
         super();
@@ -100,7 +100,7 @@ class Endboss extends MovableObject {
      */
     playCluckingSound() {
         this.SOUND_CLUCKING.loop = true;
-        this.playSound(this.SOUND_CLUCKING);
+        this.playSound(this.SOUND_CLUCKING, 0.5);
     }
 
     /**

@@ -179,7 +179,7 @@ class Main extends MovableObject {
             }
 
             if (this.world.keyboard.RIGHT & !this.isAirborne() || this.world.keyboard.LEFT & !this.isAirborne()) {
-                this.playSound(this.SOUND_WALKING);
+                this.playSound(this.SOUND_WALKING, 1);
                 this.playAnimation(this.IMAGES_WALKING);
             }
 
@@ -329,7 +329,7 @@ class Main extends MovableObject {
      */
     jump() {
         this.speedY = 30;
-        this.playSound(this.SOUND_JUMPING);
+        this.playSound(this.SOUND_JUMPING, 1);
         setTimeout(() => {
             this.resetSound(this.SOUND_JUMPING);
         }, 500);

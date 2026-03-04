@@ -9,6 +9,7 @@ const scripts = [
     './models/chicken.class.js',
     './models/small-chicken.class.js',
     './models/endboss.class.js',
+    './models/boss-health-status.class.js',
     './models/cloud.class.js',
     './models/background-object.class.js',
     './models/bottles.class.js',
