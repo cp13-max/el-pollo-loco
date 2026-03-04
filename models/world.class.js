@@ -205,12 +205,14 @@ class World {
     }
 
     /**
-     * calls multiple functions when player is hit 
+     * calls multiple functions when player is hit
      */
     heroTakesHit() {
-        this.main.getHit();
+        if (!this.main.isHurt()) {
+            this.main.getHit();
+            this.main.damageThrowBack();
+        }
         this.main.hasIdleTimeStarted = false;
-        this.main.damageThrowBack();
         this.healthBar.setBarPercentage(this.main.health);
         if (this.main.isDead()) {
             setTimeout(() => {
@@ -222,7 +224,7 @@ class World {
 
     /**
      * plays sound and animation of an breaking bottle after it collided with enemy and removes it afterwards from game
-     * @param {object} bottle 
+     * @param {object} bottle
      */
     bottleBreaks(bottle) {
         this.main.playSound(this.main.SOUND_BOTTLE_BREAK, 1);
@@ -240,7 +242,7 @@ class World {
 
     /**
      * checks if the palyer has bottles
-     * @returns 
+     * @returns
      */
     heroHasBottles() {
         return this.bottleBar.percentages > 0;
@@ -260,7 +262,7 @@ class World {
 
     /**
      * sets for each enemy an inteval which checks if thrown bottle is colliding with them
-     * @param {object} bottle 
+     * @param {object} bottle
      */
     checkForBottleEnemyCollision(bottle) {
         let interval = setInterval(() => {
@@ -277,11 +279,11 @@ class World {
                     this.bottleBreaks(bottle);
                     clearInterval(interval);
                     boss.life -= 20;
-                    this.bossHealth[0].setBarPercentage(boss.life)
+                    this.bossHealth[0].setBarPercentage(boss.life);
 
                     if (boss.life <= 0) {
                         this.enemyDies(boss);
-                        this.bossHealth = []
+                        this.bossHealth = [];
                     }
                 }
             });
@@ -290,7 +292,7 @@ class World {
 
     /**
      * sets objects in level (enemies, items and backgroundobjects)
-     * @param {object} level 
+     * @param {object} level
      */
     setLevel(level) {
         this.enemies = level.enemies;
@@ -312,7 +314,7 @@ class World {
     setWorld() {
         this.main = new Main(this.level_length);
         this.main.world = this;
-        this.bossHealth.push(new BossHealth())
+        this.bossHealth.push(new BossHealth());
         this.GAME_MUSIC.loop = true;
         this.GAME_MUSIC.play();
     }
@@ -334,7 +336,6 @@ class World {
         if (this.boss[0]) {
             this.boss[0].SOUND_CLUCKING.volume = 0;
         }
-        
     }
 
     /**
@@ -353,7 +354,6 @@ class World {
         if (this.boss[0]) {
             this.boss[0].SOUND_CLUCKING.volume = 0.5;
         }
-        
     }
 
     /**
@@ -387,7 +387,7 @@ class World {
 
     /**
      * draws a single specific object
-     * @param {object} object 
+     * @param {object} object
      */
     addToMap(object) {
         if (object instanceof HealthBar || object instanceof CoinBar || object instanceof BottleBar) {
@@ -410,7 +410,7 @@ class World {
 
     /**
      * draws all objects from a specific array (e.g clouds)
-     * @param {array} objects 
+     * @param {array} objects
      */
     addObjectsToMap(objects) {
         try {
@@ -424,7 +424,7 @@ class World {
 
     /**
      * changes the direction of all objects in game
-     * @param {object} object 
+     * @param {object} object
      */
     flipImage(object) {
         this.ctx.save();
@@ -435,7 +435,7 @@ class World {
 
     /**
      * changes the direction all objects in game to normal
-     * @param {object} object 
+     * @param {object} object
      */
     reflipImage(object) {
         object.x = object.x * -1;
@@ -463,7 +463,7 @@ class World {
         this.resetObjects('coins');
         this.resetObjects('hero');
         this.resetObjects('clouds');
-        this.bossHealth.push(new BossHealth())
+        this.bossHealth.push(new BossHealth());
         clearInterval(this.checkHeroPosition);
         this.checkHeroPosition = this.HeroPositionCheck();
     }
@@ -479,7 +479,7 @@ class World {
 
     /**
      * resets single objects/all objects from an array to default status
-     * @param {array} objects 
+     * @param {array} objects
      */
     resetObjects(objects) {
         switch (objects) {
@@ -560,7 +560,7 @@ class World {
     }
 
     /**
-     * resets all bottles(items) 
+     * resets all bottles(items)
      */
     resetBottles() {
         this.bottles = [];

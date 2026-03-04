@@ -113,7 +113,7 @@ class Main extends MovableObject {
     damageThrowBack() {
         let throwBack = setInterval(() => {
             this.throwBack();
-        }, 60);
+        }, 1);
         setTimeout(() => {
             clearInterval(throwBack);
         }, 500);
@@ -125,8 +125,9 @@ class Main extends MovableObject {
     throwBack() {
         if (this.otherDirection) {
             this.x += 1.5;
-        } else {
-            this.x -= 1.5;
+        }
+        if (!this.otherDirection && this.x >= 0) {
+             this.x -= 1.5;
         }
     }
 
@@ -165,7 +166,7 @@ class Main extends MovableObject {
                 this.deathAnimation();
                 return;
             }
-            if (this.isHurt()) {
+            if (this.wasRecentlyHit()) {
                 this.playAnimation(this.IMAGES_HURT);
                 return;
             }

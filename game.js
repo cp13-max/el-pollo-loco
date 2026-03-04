@@ -129,11 +129,12 @@ function startGame() {
     if (!gameHasStarted) {
         setLevel1();
         setWorld(canvas, keyboard, level1);
-        removeStartScreen();
+        
         gameHasStarted = true;
     }
     pauseContinueGame();
     setDefaultMusicVolume();
+    removeStartScreen();
 }
 
 /**
