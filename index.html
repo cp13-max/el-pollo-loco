@@ -71,7 +71,7 @@
                         src="./img/downloaded/restart-button.png"
                         alt=""
                     />
-                    <a href="./impressum.html" target="_blank"><img class="legal-notice" src="./img/downloaded/legal-notice.jpg" alt=""></a>
+                    
                     <img onclick="enterFullScreen()" class="full-screen" src="./img/downloaded/full-screen-2.png" alt="" />
                     
                     <div id="mobile-bar" class="mobile-bar">
@@ -86,8 +86,10 @@
                     </div>
                 </div>
             </div>
-            <div class="controls">
-                <div class="controll-expo" id="controll-expo">
+            <div id="control-arrow" class="control-arrow" onclick="showControls()">&#10148</div>
+            <div id="controls" class="controls">
+                
+                <div class="control-wrap"><div class="controll-expo" id="controll-expo">
                     <div>W <br />D <br />Space <br />F <br />H</div>
                     <div>
                         : move left <br />
@@ -97,7 +99,9 @@
                         : pause/continue game
                     </div>
                 </div>
-                <div>Jump on enemies to kill. <br />Collect coins and bottles. <br />Kill Boss only with bottles.</div>
+                <div>Jump on enemies to kill. <br />Collect coins and bottles. <br />Kill Boss only with bottles.</div></div>
+                
+                <a class="imprint" href="./impressum.html" target="_blank"><img class="legal-notice" src="./img/downloaded/legal-notice.jpg" alt="">Imprint</a>
             </div>
             
         </div>

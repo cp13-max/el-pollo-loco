@@ -194,3 +194,8 @@ function setMobileButtonEvents(button, key) {
         keyboard[key] = false;
     });
 }
+
+function showControls() {
+    document.getElementById('control-arrow').classList.toggle('rotate-arrow')
+    document.getElementById('controls').classList.toggle('d-flex')
+}

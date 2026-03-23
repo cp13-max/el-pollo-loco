@@ -85,7 +85,7 @@ canvas {
 .restart-button:hover,
 .play-music-button:hover,
 .return-to-screen-button:hover,
-.legal-notice:hover {
+.control-arrow:hover{
     scale: 1.2;
 }
 
@@ -131,9 +131,7 @@ canvas {
 .legal-notice{
     height: 40px;
     width: 40px;
-    position: absolute;
-    bottom: 1%;
-    left: 1%;
+    
     /* filter: brightness(0) saturate(100%); */
     cursor: pointer;
 }
@@ -164,16 +162,48 @@ h1 {
 
 .controls {
     background-color: white;
-    display: flex;
-    gap: 72px;
-    font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
     padding: 12px 24px;
     border-radius: 12px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+    gap: 16px;
+}
+
+.control-wrap{
+    display: flex;
+    gap: 32px;
+}
+
+.control-arrow{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    rotate: 90deg;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 24px;
+    border-radius: 50%;
 }
 
 .controll-expo {
     display: flex;
     gap: 16px;
+}
+
+.imprint{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.rotate-arrow{
+    rotate: 270deg;
+}
+
+.d-flex{
+    display: flex;
 }
 
 .rotate-notice {
@@ -201,21 +231,22 @@ h1 {
         display: none;
     }
 
+    
+
+}
+
+@media screen and (pointer: coarse) {
     .mobile-bar {
         display: flex;
     }
 
-    .legal-notice {
-        bottom: 15%;
+    .control-arrow{
+        display: none;
     }
 }
 
 @media screen and (max-height: 700px) {
     h1 {
-        display: none;
-    }
-
-    .controls {
         display: none;
     }
 }
@@ -224,12 +255,6 @@ h1 {
     .icon-bar img {
         height: 45%;
         width: 45%;
-    }
-}
-
-@media screen and (max-width: 350px) {
-    .controls {
-        display: none;
     }
 }
 
@@ -253,7 +278,7 @@ h1 {
     }
 }
 
-@media screen and (orientation: portrait) and (max-width: 500px) and (max-height: 500px) {
+@media screen and (orientation: portrait) and (pointer: coarse) {
     .rotate-notice {
         visibility: visible;
     }
