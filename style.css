@@ -71,7 +71,7 @@ canvas {
 .restart-button {
     height: 100px;
     width: 100px;
-    
+
     border-radius: 30px;
     cursor: pointer;
 }
@@ -281,6 +281,10 @@ h1 {
     }
 }
 
+
+    
+
+
 @media screen and (pointer: coarse) {
     .canvas-container {
         width: 100%;
@@ -308,6 +312,11 @@ h1 {
     h1 {
         display: none;
     }
+    .canvas-container {
+        width: 100%;
+        max-width: 720px;
+    }
+
 }
 
 @media screen and (max-width: 500px) {
