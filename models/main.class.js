@@ -110,9 +110,9 @@ class Main extends MovableObject {
     /**
      * player character is pushed back(x-axis) after hit is taken
      */
-    damageThrowBack() {
+    damageThrowBack(position) {
         let throwBack = setInterval(() => {
-            this.throwBack();
+            this.throwBack(position);
         }, 1);
         setTimeout(() => {
             clearInterval(throwBack);
@@ -122,18 +122,20 @@ class Main extends MovableObject {
     /**
      * the specific distance hero is pushed back after taken hit
      */
-    throwBack() {
-        if (this.otherDirection) {
-            this.x += 1.5;
-        }
-        if (!this.otherDirection && this.x >= 0) {
-             this.x -= 1.5;
+    throwBack(position) {
+        if (this.x >= 120) {
+            if (position == 'front') {
+                this.x -= 1.5;
+            }
+            if (position == 'rear') {
+                this.x += 1.5;
+            }
         }
     }
 
     /**
      * moves the character along x-axis with move animations and sets the camera
-     * @param {num} level_end 
+     * @param {num} level_end
      */
     animate(level_end) {
         setInterval(() => {
@@ -141,7 +143,7 @@ class Main extends MovableObject {
             if (gameIsPaused) {
                 return;
             }
-            if (this.isHurt()) {
+            if (this.wasRecentlyHit()) {
                 return;
             }
             if (this.world.keyboard.RIGHT && this.x < level_end) {
@@ -155,7 +157,7 @@ class Main extends MovableObject {
 
     /**
      * plays death/jump/hurt/idle animations when condition is met
-     * @returns 
+     * @returns
      */
     movementAnimations() {
         return setInterval(() => {
@@ -176,7 +178,7 @@ class Main extends MovableObject {
             }
 
             if (this.isAirborne()) {
-                this.playJumpAnimation()
+                this.playJumpAnimation();
             }
 
             if (this.world.keyboard.RIGHT & !this.isAirborne() || this.world.keyboard.LEFT & !this.isAirborne()) {
@@ -223,7 +225,7 @@ class Main extends MovableObject {
 
     /**
      * checks for key input or if hero is airborne/takes hit
-     * @returns 
+     * @returns
      */
     checkForInput() {
         if (
@@ -248,7 +250,7 @@ class Main extends MovableObject {
     /**
      * checks if there are no key inputs or if hero is not airborne/does not take a hit
      * result is needed for idle animation
-     * @returns 
+     * @returns
      */
     checkForNoInput() {
         if (
@@ -282,7 +284,7 @@ class Main extends MovableObject {
 
     /**
      * decides whether idle animation should be played
-     * @returns 
+     * @returns
      */
     isIdle() {
         let timespan = new Date().getTime() - this.idleTimeStart;
@@ -290,7 +292,7 @@ class Main extends MovableObject {
         if (timespan > 7) {
             return 'long idle';
         }
-        if (timespan > 1) {
+        if (timespan > 0) {
             return 'idle';
         }
     }
@@ -300,7 +302,7 @@ class Main extends MovableObject {
      */
     deathAnimation() {
         this.playAnimation(this.IMAGES_DEAD);
-        this.playAnimation(this.IMAGES_DEAD);
+
         this.damageThrowBack();
         this.resetSound(this.SOUND_WALKING);
         this.y += 20;
@@ -335,33 +337,4 @@ class Main extends MovableObject {
             this.resetSound(this.SOUND_JUMPING);
         }, 500);
     }
-
-    // jumpWindupAnimation() {
-    //     this.isJumping = true;
-
-    //     this.loadImage('img/2_character_pepe/3_jump/J-31.png');
-    //     setTimeout(() => {
-    //         this.loadImage('img/2_character_pepe/3_jump/J-32.png');
-    //     }, 40);
-    //     setTimeout(() => {
-    //         this.loadImage('img/2_character_pepe/3_jump/J-33.png');
-    //     }, 80);
-    //     setTimeout(() => {}, 120);
-    // }
-
-    // jumpEndAnimation() {
-    //     this.isJumping = false;
-    //     this.animationIsPlaying = true;
-
-    //     this.loadImage('img/2_character_pepe/3_jump/J-37.png');
-    //     setTimeout(() => {
-    //         this.loadImage('img/2_character_pepe/3_jump/J-38.png');
-    //     }, 40);
-    //     setTimeout(() => {
-    //         this.loadImage('img/2_character_pepe/3_jump/J-39.png');
-    //     }, 80);
-    //     setTimeout(() => {
-    //         this.animationIsPlaying = false;
-    //     }, 120);
-    // }
 }

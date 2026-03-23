@@ -18,6 +18,7 @@ const scripts = [
     './models/keyboard.class.js',
     './models/level.class.js',
     './levels/level1.js',
+    '../js/world-support.js',
     './models/world.class.js',
 ];
 
@@ -30,7 +31,7 @@ const mediaQueryMatch = window.matchMedia('(orientation: landscape) and (max-wid
 /**
  * creates a script and adds it to head
  * @param {string} src src of the script
- * @returns 
+ * @returns
  */
 function loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -53,7 +54,6 @@ async function loadAllScripts() {
         const src = scripts[index];
         await loadScript(src);
     }
-    // await Promise.all(scripts.map(loadScript));
     keyboard = new Keyboard();
 }
 
@@ -67,7 +67,7 @@ async function loadGame() {
 }
 
 /**
- * toggles load screen/animation on/off 
+ * toggles load screen/animation on/off
  */
 function ToggleLoadingScreen() {
     document.getElementById('loading-screen').classList.toggle('d-none');
@@ -129,13 +129,12 @@ function startGame() {
     if (!gameHasStarted) {
         setLevel1();
         setWorld(canvas, keyboard, level1);
-        
+
         gameHasStarted = true;
         removeStartScreen();
     }
     pauseContinueGame();
     setDefaultMusicVolume();
-    
 }
 
 /**
@@ -143,8 +142,8 @@ function startGame() {
  */
 function setDefaultMusicVolume() {
     if (!musicIsmute) {
-        world.unMuteAllMusic();
-    } else world.muteAllMusic();
+        unMuteAllMusic(world);
+    } else muteAllMusic(world);
 }
 
 /**
@@ -183,7 +182,7 @@ function removeStartScreen() {
 function loadStartScreen() {
     document.getElementById('start-screen').style.display = 'inline';
     document.getElementById('start-screen').src = './img/9_intro_outro_screens/start/startscreen_1.png';
-    document.getElementById('restart-return').style.display = 'none'
+    document.getElementById('restart-return').style.display = 'none';
 }
 
 /**
@@ -197,8 +196,9 @@ function returnToScreen() {
     world.resetGame();
     gameIsPaused = false;
     pauseContinueGame();
-    world.muteAllMusic();
+    muteAllMusic(world);
     loadStartScreen();
+    gameHasStarted = false;
 }
 
 /**
@@ -217,9 +217,9 @@ function muteMusic() {
 
     if (gameHasStarted) {
         if (musicIsmute) {
-            world.muteAllMusic();
+            muteAllMusic(world);
         } else {
-            world.unMuteAllMusic();
+            unMuteAllMusic(world);
         }
     }
 }
@@ -332,6 +332,6 @@ function setMobileButtonEvents(button, key) {
 }
 
 function showControls() {
-    document.getElementById('control-arrow').classList.toggle('rotate-arrow')
-    document.getElementById('controls').classList.toggle('d-flex')
+    document.getElementById('control-arrow').classList.toggle('rotate-arrow');
+    document.getElementById('controls').classList.toggle('d-flex');
 }

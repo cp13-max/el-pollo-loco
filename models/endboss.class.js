@@ -122,7 +122,6 @@ class Endboss extends MovableObject {
         this.resetSound(this.SOUND_CLUCKING);
         this.clearStoppableIntervals();
         this.setStoppableInterval(() => this.playAnimation(this.IMAGES_DEAD), 500 / 4);
-        // this.setStoppableInterval(this.proximityMove.bind(this));
         setTimeout(() => {
             this.clearStoppableIntervals();
         }, 1000);

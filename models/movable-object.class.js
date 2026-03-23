@@ -34,6 +34,19 @@ class MovableObject extends DrawableObject {
         );
     }
 
+    FrontOrRear(object){
+        if (this.x + this.width - this.offset.right > object.x + object.offset.left &&
+            this.x + this.width - this.offset.right < object.x + object.width/2 + object.offset.left
+        ) {
+            return('front')
+        }
+
+    if (this.x + this.offset.left < object.x + object.width - object.offset.right &&
+        this.x + this.offset.left > object.x + object.width/2 - object.offset.right
+    ) {
+            return('rear')
+    }
+    }
     /**
      * checks if player character is jumping on enemies/colliding from above
      * @param {object} object
@@ -109,7 +122,7 @@ class MovableObject extends DrawableObject {
      * @param {array} images
      */
     playAnimation(images) {
-        if (!gameIsPaused) {
+        if (!gameIsPaused){
             let i = this.currentImage % images.length;
             this.img = this.imageCache[images[i]];
             this.currentImage++;
