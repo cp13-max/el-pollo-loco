@@ -47,7 +47,7 @@ class Endboss extends MovableObject {
         bottom: 15,
         left: 5,
     };
-    hitsTaken = 0;
+    life = 100;
     con;
     constructor(x, y) {
         super();
@@ -64,12 +64,18 @@ class Endboss extends MovableObject {
         this.speed = 7;
     }
 
+    /**
+     * lets this object move/changes x-position by set amount
+     */
     animate() {
         if (!gameIsPaused) {
             this.autoMove(this.speed);
         }
     }
 
+    /**
+     * sets auto movement and plays different subsequent animations when this object(boss) is triggered
+     */
     alertAnimation() {
         this.setMovement();
         this.setSelfDeletingInterval(() => this.playAnimation(this.IMAGES_WALKING), 500 / 4, 500);
@@ -82,15 +88,24 @@ class Endboss extends MovableObject {
         }, 500);
     }
 
+    /**
+     * sets interval for auto movement
+     */
     setMovement() {
         this.setStoppableInterval(this.animate.bind(this), 100);
     }
 
+    /**
+     * plays a clucking sound
+     */
     playCluckingSound() {
         this.SOUND_CLUCKING.loop = true;
-        this.playSound(this.SOUND_CLUCKING);
+        this.playSound(this.SOUND_CLUCKING, 0.5);
     }
 
+    /**
+     * checks if clucking sound is mute/unmute
+     */
     checkForPausedMusic() {
         if (gameIsPaused) {
             this.pauseSound(this.SOUND_CLUCKING);
@@ -99,6 +114,9 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * death animation of this object
+     */
     deathAnimation() {
         this.currentImage = 0;
         this.resetSound(this.SOUND_CLUCKING);
@@ -108,10 +126,5 @@ class Endboss extends MovableObject {
         setTimeout(() => {
             this.clearStoppableIntervals();
         }, 1000);
-    }
-
-    proximityMove() {
-        console.log(this.speed);
-        console.log(this.hitsTaken);
     }
 }

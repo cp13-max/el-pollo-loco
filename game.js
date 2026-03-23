@@ -1,10 +1,84 @@
+const scripts = [
+    './models/drawable-objects.class.js',
+    './models/movable-object.class.js',
+    './models/status-bar.class.js',
+    './models/health-status.class.js',
+    './models/bottle-status.class.js',
+    './models/coin-status.class.js',
+    './models/main.class.js',
+    './models/chicken.class.js',
+    './models/small-chicken.class.js',
+    './models/endboss.class.js',
+    './models/boss-health-status.class.js',
+    './models/cloud.class.js',
+    './models/background-object.class.js',
+    './models/bottles.class.js',
+    './models/coins.class.js',
+    './models/throwable-bottle.class.js',
+    './models/keyboard.class.js',
+    './models/level.class.js',
+    './levels/level1.js',
+    './models/world.class.js',
+];
+
 let canvas;
 let world;
+let keyboard;
 
-let keyboard = new Keyboard();
 const mediaQueryMatch = window.matchMedia('(orientation: landscape) and (max-width: 600px) and (max-height: 500px)');
 
+/**
+ * creates a script and adds it to head
+ * @param {string} src src of the script
+ * @returns 
+ */
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.defer = true;
+
+        script.onload = () => resolve(src);
+        script.onerror = () => reject(new Error(`Fehler beim Laden von ${src}`));
+
+        document.head.appendChild(script);
+    });
+}
+
+/**
+ * creates mutiple scripts and load them in order
+ */
+async function loadAllScripts() {
+    for (let index = 0; index < scripts.length; index++) {
+        const src = scripts[index];
+        await loadScript(src);
+    }
+    // await Promise.all(scripts.map(loadScript));
+    keyboard = new Keyboard();
+}
+
+/**
+ * shows load animation while all scripts are created/loaded
+ */
+async function loadGame() {
+    ToggleLoadingScreen();
+    await loadAllScripts();
+    ToggleLoadingScreen();
+}
+
+/**
+ * toggles load screen/animation on/off 
+ */
+function ToggleLoadingScreen() {
+    document.getElementById('loading-screen').classList.toggle('d-none');
+}
+
+/**
+ * function is called upon loading the page
+ * sets canvas, buttons for mobile and music
+ */
 function init() {
+    loadGame();
     canvas = document.getElementById('canvas');
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
@@ -12,6 +86,9 @@ function init() {
     setMusicStatus();
 }
 
+/**
+ * gets music status (mute or not) from local storage
+ */
 function setMusicStatus() {
     let text = localStorage.getItem('musicIsmuted');
     musicIsmute = JSON.parse(text);
@@ -20,10 +97,13 @@ function setMusicStatus() {
         musicIsmute,
         'play-music-button',
         './img/downloaded/mute-icon.png',
-        './img/downloaded/speaker-icon.png'
+        './img/downloaded/speaker-icon.png',
     );
 }
 
+/**
+ * canvas(game) is set to full screen
+ */
 function enterFullScreen() {
     if (!fullScreen) {
         document.getElementById('canvas-container').requestFullscreen();
@@ -34,50 +114,80 @@ function enterFullScreen() {
     }
 }
 
+/**
+ * restarts entire game
+ */
 function restartGame() {
     world.resetGame();
 }
 
+/**
+ * loads and starts the game.
+ * if game has begun it pauses/unpauses game
+ */
 function startGame() {
     if (!gameHasStarted) {
         setLevel1();
         setWorld(canvas, keyboard, level1);
+        
         gameHasStarted = true;
     }
-    removeStartScreen();
     pauseContinueGame();
     setDefaultMusicVolume();
+    removeStartScreen();
 }
 
+/**
+ * sets the volume of all music to default status
+ */
 function setDefaultMusicVolume() {
     if (!musicIsmute) {
         world.unMuteAllMusic();
     } else world.muteAllMusic();
 }
 
+/**
+ * pauses/unpauses game
+ */
 function pauseContinueGame() {
     gameIsPaused = !gameIsPaused;
     setImageForIcon(
         gameIsPaused,
         'start-button',
         './img/downloaded/real-start-btn.png',
-        './img/downloaded/real-pause-btn.png'
+        './img/downloaded/real-pause-btn.png',
     );
 }
 
+/**
+ * creates a new game
+ * @param {object} canvas
+ * @param {object} keyboard
+ * @param {object} level1
+ */
 function setWorld(canvas, keyboard, level1) {
     world = new World(canvas, keyboard, level1);
 }
 
+/**
+ * removes the start screen when game begins
+ */
 function removeStartScreen() {
     document.getElementById('start-screen').style.display = 'none';
 }
 
+/**
+ * load start screen
+ */
 function loadStartScreen() {
     document.getElementById('start-screen').style.display = 'inline';
-    document.getElementById('start-screen').src = './img/9_intro_outro_screens/start/startscreen_1.png'
+    document.getElementById('start-screen').src = './img/9_intro_outro_screens/start/startscreen_1.png';
 }
 
+/**
+ * ends game and return to start screen
+ * @returns
+ */
 function returnToScreen() {
     if (!gameHasStarted) {
         return;
@@ -89,17 +199,20 @@ function returnToScreen() {
     loadStartScreen();
 }
 
+/**
+ * mutes/unmutes all music and saves music status in local storage
+ */
 function muteMusic() {
     musicIsmute = !musicIsmute;
-
     localStorage.setItem('musicIsmuted', musicIsmute);
 
     setImageForIcon(
         musicIsmute,
         'play-music-button',
         './img/downloaded/mute-icon.png',
-        './img/downloaded/speaker-icon.png'
+        './img/downloaded/speaker-icon.png',
     );
+
     if (gameHasStarted) {
         if (musicIsmute) {
             world.muteAllMusic();
@@ -109,6 +222,13 @@ function muteMusic() {
     }
 }
 
+/**
+ * changes the image of the play/pause and mute/unmute buttons
+ * @param {boolean} condition
+ * @param {string} iconId
+ * @param {string} img1
+ * @param {string} img2
+ */
 function setImageForIcon(condition, iconId, img1, img2) {
     if (condition) {
         document.getElementById(iconId).src = img1;
@@ -117,6 +237,9 @@ function setImageForIcon(condition, iconId, img1, img2) {
     }
 }
 
+/**
+ * checks if certain buttons are pressed
+ */
 window.addEventListener('keydown', (e) => {
     if (e.code == 'KeyF') {
         keyboard.F = true;
@@ -144,6 +267,9 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+/**
+ * checks if certain buttons are no longer pressed
+ */
 window.addEventListener('keyup', (e) => {
     if (e.code == 'KeyA' || e.code == 'ArrowLeft') {
         keyboard.LEFT = false;
@@ -171,6 +297,9 @@ window.addEventListener('keyup', (e) => {
     }
 });
 
+/**
+ * creates on screen buttons which replaces keyboard buttons on mobile devices
+ */
 function setMobileButtons() {
     let mobileLeft = document.getElementById('btn-mobile-left');
     let mobileRight = document.getElementById('btn-mobile-right');
@@ -183,6 +312,11 @@ function setMobileButtons() {
     setMobileButtonEvents(mobileThrow, 'F');
 }
 
+/**
+ * checks if mobile buttons are touched/no longer touched
+ * @param {object} button
+ * @param {string} key
+ */
 function setMobileButtonEvents(button, key) {
     button.addEventListener('touchstart', (e) => {
         e.preventDefault();

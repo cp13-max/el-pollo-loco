@@ -107,23 +107,34 @@ class Main extends MovableObject {
         this.movementAnimas = this.movementAnimations();
     }
 
+    /**
+     * player character is pushed back(x-axis) after hit is taken
+     */
     damageThrowBack() {
         let throwBack = setInterval(() => {
             this.throwBack();
-        }, 60);
+        }, 1);
         setTimeout(() => {
             clearInterval(throwBack);
         }, 500);
     }
 
+    /**
+     * the specific distance hero is pushed back after taken hit
+     */
     throwBack() {
         if (this.otherDirection) {
             this.x += 1.5;
-        } else {
-            this.x -= 1.5;
+        }
+        if (!this.otherDirection && this.x >= 0) {
+             this.x -= 1.5;
         }
     }
 
+    /**
+     * moves the character along x-axis with move animations and sets the camera
+     * @param {num} level_end 
+     */
     animate(level_end) {
         setInterval(() => {
             this.world.camera_x = -this.x + 120;
@@ -142,6 +153,10 @@ class Main extends MovableObject {
         }, 1000 / 60);
     }
 
+    /**
+     * plays death/jump/hurt/idle animations when condition is met
+     * @returns 
+     */
     movementAnimations() {
         return setInterval(() => {
             if (gameIsPaused) {
@@ -151,7 +166,7 @@ class Main extends MovableObject {
                 this.deathAnimation();
                 return;
             }
-            if (this.isHurt()) {
+            if (this.wasRecentlyHit()) {
                 this.playAnimation(this.IMAGES_HURT);
                 return;
             }
@@ -161,24 +176,11 @@ class Main extends MovableObject {
             }
 
             if (this.isAirborne()) {
-                if (this.speedY > 5) {
-                    this.loadImage('img/2_character_pepe/3_jump/J-34.png');
-                }
-                if (this.speedY < 5 && this.speedY > -5) {
-                    this.currentImage++;
-                    this.loadImage('img/2_character_pepe/3_jump/J-35.png');
-                }
-                if (this.speedY < -5 && this.speedY > -30) {
-                    this.currentImage++;
-                    this.loadImage('img/2_character_pepe/3_jump/J-36.png');
-                }
+                this.playJumpAnimation()
             }
-            
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.SPACE) {
-                this.hasIdleTimeStarted = false;
-            }
+
             if (this.world.keyboard.RIGHT & !this.isAirborne() || this.world.keyboard.LEFT & !this.isAirborne()) {
-                this.playSound(this.SOUND_WALKING);
+                this.playSound(this.SOUND_WALKING, 1);
                 this.playAnimation(this.IMAGES_WALKING);
             }
 
@@ -186,33 +188,105 @@ class Main extends MovableObject {
                 this.resetSound(this.SOUND_WALKING);
             }
 
-            if (
-                !this.world.keyboard.RIGHT &
-                !this.world.keyboard.LEFT &
-                !this.world.keyboard.SPACE &
-                !this.isAirborne() &
-                !this.isHurt()
-            ) {
-                if (this.isIdle() == 'long idle') {
-                    this.playAnimation(this.IMAGES_LONG_IDLE);
-                } else if (this.isIdle() == 'idle') {
-                    this.playAnimation(this.IMAGES_IDLE);
-                } else {
-                    this.loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
-                }
-
-                if (!this.hasIdleTimeStarted) {
-                    this.idleTimeStart = new Date().getTime();
-                }
-                this.hasIdleTimeStarted = true;
-            }
+            this.checkForIdleStatus();
         }, 100);
     }
 
+    /**
+     * specific jump animation
+     */
+    playJumpAnimation() {
+        if (this.speedY > 5) {
+            this.loadImage('img/2_character_pepe/3_jump/J-34.png');
+        }
+        if (this.speedY < 5 && this.speedY > -5) {
+            this.currentImage++;
+            this.loadImage('img/2_character_pepe/3_jump/J-35.png');
+        }
+        if (this.speedY < -5 && this.speedY > -30) {
+            this.currentImage++;
+            this.loadImage('img/2_character_pepe/3_jump/J-36.png');
+        }
+    }
+
+    /**
+     * checks for idle condiion
+     */
+    checkForIdleStatus() {
+        if (this.checkForInput()) {
+            this.resetIdleTime();
+        }
+        if (this.checkForNoInput()) {
+            this.playIdleAnimation();
+        }
+    }
+
+    /**
+     * checks for key input or if hero is airborne/takes hit
+     * @returns 
+     */
+    checkForInput() {
+        if (
+            this.world.keyboard.RIGHT ||
+            this.world.keyboard.LEFT ||
+            this.world.keyboard.SPACE ||
+            this.world.keyboard.F ||
+            this.isAirborne() ||
+            this.isHurt()
+        ) {
+            return true;
+        }
+    }
+
+    /**
+     * resets counter for idle time
+     */
+    resetIdleTime() {
+        this.hasIdleTimeStarted = false;
+    }
+
+    /**
+     * checks if there are no key inputs or if hero is not airborne/does not take a hit
+     * result is needed for idle animation
+     * @returns 
+     */
+    checkForNoInput() {
+        if (
+            !this.world.keyboard.RIGHT &
+            !this.world.keyboard.LEFT &
+            !this.world.keyboard.SPACE &
+            !this.world.keyboard.F &
+            !this.isAirborne() &
+            !this.isHurt()
+        ) {
+            return true;
+        }
+    }
+
+    /**
+     * checks idle time and plays idle animations if idle time surpasses certain thesholds
+     */
+    playIdleAnimation() {
+        if (!this.hasIdleTimeStarted) {
+            this.idleTimeStart = new Date().getTime();
+        }
+        this.hasIdleTimeStarted = true;
+        if (this.isIdle() == 'long idle') {
+            this.playAnimation(this.IMAGES_LONG_IDLE);
+        } else if (this.isIdle() == 'idle') {
+            this.playAnimation(this.IMAGES_IDLE);
+        } else {
+            this.loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
+        }
+    }
+
+    /**
+     * decides whether idle animation should be played
+     * @returns 
+     */
     isIdle() {
         let timespan = new Date().getTime() - this.idleTimeStart;
         timespan /= 1000;
-
         if (timespan > 7) {
             return 'long idle';
         }
@@ -221,6 +295,9 @@ class Main extends MovableObject {
         }
     }
 
+    /**
+     * plays death animation of the hero
+     */
     deathAnimation() {
         this.playAnimation(this.IMAGES_DEAD);
         this.playAnimation(this.IMAGES_DEAD);
@@ -232,19 +309,28 @@ class Main extends MovableObject {
         }, 1000);
     }
 
+    /**
+     * moves the hero right along x-axis
+     */
     moveRight() {
         this.x += this.speed;
         this.otherDirection = false;
     }
 
+    /**
+     * moves the hero left along x-axis
+     */
     moveLeft() {
         this.x -= this.speed;
         this.otherDirection = true;
     }
 
+    /**
+     * initiates heroes jump
+     */
     jump() {
         this.speedY = 30;
-        this.playSound(this.SOUND_JUMPING);
+        this.playSound(this.SOUND_JUMPING, 1);
         setTimeout(() => {
             this.resetSound(this.SOUND_JUMPING);
         }, 500);

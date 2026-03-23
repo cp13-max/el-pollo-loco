@@ -22,11 +22,14 @@ class Chicken extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
         this.x = x;
         this.y = y;
-        this.speed = 0; // 5 + Math.random() * 10
+        this.speed = 7 + Math.random() * 10; // 5 + Math.random() * 10
         this.saveDefaultStatus(defaultEnemies, x, y);
         this.setStoppableInterval(this.animate.bind(this), 100);
     }
 
+    /**
+     * gives this object automatic movement and move animations
+     */
     animate() {
         if (!gameIsPaused) {
             this.moveAnimation();
@@ -34,10 +37,16 @@ class Chicken extends MovableObject {
         }
     }
 
+    /**
+     * animation for movement
+     */
     moveAnimation() {
         this.playAnimation(this.IMAGES_WALKING);
     }
 
+    /**
+     * animation for death/dying
+     */
     deathAnimation() {
         this.playAnimation(this.IMAGES_DEAD);
     }
