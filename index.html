@@ -12,7 +12,6 @@
     <body onload="init()">
         <div id="loading-screen" class="loading-screen d-none">
             <div class="loading-text">Loading<span class="dots"></span></div>
-            
         </div>
         <div class="game-div" id="game-div">
             <h1>El Pollo Loco</h1>
@@ -41,22 +40,23 @@
                             src="./img/downloaded/speaker-icon.png"
                             alt=""
                         />
+                    </div>
+                    <div id="restart-return" class="restart-return">
                         <img
                             id="return-to-screen-button"
                             class="return-to-screen-button"
                             onclick="returnToScreen()"
-                            src="./img/downloaded/return-to-screen.png"
+                            src="./img/downloaded/return-to-menu.png"
+                            alt=""
+                        /><img
+                            id="restart-button"
+                            onclick="restartGame()"
+                            class="restart-button"
+                            src="./img/downloaded/restart-button.png"
                             alt=""
                         />
                     </div>
 
-                    <img
-                        id="restart-button"
-                        onclick="restartGame()"
-                        class="restart-button"
-                        src="./img/downloaded/restart-button.png"
-                        alt=""
-                    />
                     <a href="./impressum.html" target="_blank"
                         ><img class="legal-notice" src="./img/downloaded/legal-notice.jpg" alt=""
                     /></a>

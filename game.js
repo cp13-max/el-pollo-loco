@@ -131,10 +131,11 @@ function startGame() {
         setWorld(canvas, keyboard, level1);
         
         gameHasStarted = true;
+        removeStartScreen();
     }
     pauseContinueGame();
     setDefaultMusicVolume();
-    removeStartScreen();
+    
 }
 
 /**
@@ -182,6 +183,7 @@ function removeStartScreen() {
 function loadStartScreen() {
     document.getElementById('start-screen').style.display = 'inline';
     document.getElementById('start-screen').src = './img/9_intro_outro_screens/start/startscreen_1.png';
+    document.getElementById('restart-return').style.display = 'none'
 }
 
 /**

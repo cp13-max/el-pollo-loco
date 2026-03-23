@@ -69,13 +69,9 @@ canvas {
 }
 
 .restart-button {
-    display: none;
     height: 100px;
     width: 100px;
-    position: absolute;
-    bottom: 12%;
-    right: 50%;
-    left: calc(50% - 50px);
+    
     border-radius: 30px;
     cursor: pointer;
 }
@@ -213,7 +209,6 @@ h1 {
     color: white;
     font-size: 36px;
     position: absolute;
-    
 }
 
 .dots::after {
@@ -221,8 +216,21 @@ h1 {
     animation: dotanimation 1.4s infinite 0s normal;
 }
 
-.d-none{
+.d-none {
     display: none;
+}
+
+.restart-return {
+    display: none;
+    gap: 64px;
+    position: absolute;
+    left: calc(50% - 120px);
+    bottom: 72px;
+}
+
+.restart-return img{
+    height: 100px;
+    width: 100px;
 }
 
 @keyframes dotanimation {

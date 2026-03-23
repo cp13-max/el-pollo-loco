@@ -513,8 +513,8 @@ class World {
     removeGameOverScreen() {
         document.getElementById('start-screen').style.display = 'none';
         document.getElementById('start-screen').src = 'img/9_intro_outro_screens/game_over/game over!.png';
+        document.getElementById('restart-return').style.display = 'none';
 
-        document.getElementById('restart-button').style.display = 'none';
     }
 
     /**
@@ -616,7 +616,7 @@ class World {
         document.getElementById('start-screen').style.display = 'inline';
         document.getElementById('start-screen').src = 'img/9_intro_outro_screens/game_over/game over!.png';
 
-        document.getElementById('restart-button').style.display = 'inline';
+        document.getElementById('restart-return').style.display = 'flex';
     }
 
     /**
@@ -628,6 +628,6 @@ class World {
         document.getElementById('start-screen').style.display = 'inline';
         document.getElementById('start-screen').src = 'img/9_intro_outro_screens/win/won_2.png';
 
-        document.getElementById('restart-button').style.display = 'inline';
+        document.getElementById('restart-return').style.display = 'flex';
     }
 }
