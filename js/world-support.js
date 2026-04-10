@@ -2,17 +2,18 @@
  * resets the plyer character
  */
 function resetHero(world) {
-    world.main.x = 120;
-    world.main.y = 135;
-    world.main.otherDirection = false;
-    world.main.health = 100;
-    world.healthBar.setBarPercentage(world.main.health);
-    world.main.bottles = 0;
-    world.bottleBar.setBarPercentage(world.main.bottles);
-    world.main.coins = 0;
-    world.coinBar.setBarPercentage(world.main.coins);
-    clearInterval(world.main.movementAnimas);
-    world.main.movementAnimas = world.main.movementAnimations();
+    world.hero.x = 120;
+    world.hero.y = 135;
+    world.hero.dead = false;
+    world.hero.otherDirection = false;
+    world.hero.health = 100;
+    world.healthBar.setBarPercentage(world.hero.health);
+    world.hero.bottles = 0;
+    world.bottleBar.setBarPercentage(world.hero.bottles);
+    world.hero.coins = 0;
+    world.coinBar.setBarPercentage(world.hero.coins);
+    clearInterval(world.hero.movementAnimas);
+    world.hero.movementAnimas = world.hero.movementAnimations();
 }
 
 /**
@@ -93,17 +94,13 @@ function resetClouds(world) {
 function checkForSmallEnemies(world) {
     world.enemies.forEach((enemy) => {
         let interval = setInterval(() => {
-            if (world.main.isColliding(enemy) && enemy.isAlive) {
-                if (world.main.isAirborne() && world.main.isFalling()) {
+            if (world.hero.isColliding(enemy) && enemy.isAlive) {
+                if (world.hero.isAirborne() && world.hero.isFalling()) {
                     world.enemyDies(enemy);
                 } else {
-                    let position = world.main.FrontOrRear(enemy);
+                    let position = world.hero.FrontOrRear(enemy);
 
                     world.heroTakesHit(position);
-                    world.main.playSound(world.main.SOUND_DAMAGE, 1);
-                    setTimeout(() => {
-                        world.main.resetSound(world.main.SOUND_DAMAGE);
-                    }, 500);
                 }
             }
         }, 1000 / 60);
@@ -114,13 +111,9 @@ function checkForSmallEnemies(world) {
 function checkForBoss(world) {
     world.boss.forEach((boss) => {
         let interval = setInterval(() => {
-            if (world.main.isColliding(boss)) {
-                let position = world.main.FrontOrRear(boss);
+            if (world.hero.isColliding(boss)) {
+                let position = world.hero.FrontOrRear(boss);
                 world.heroTakesHit(position);
-                world.main.playSound(world.main.SOUND_DAMAGE, 1);
-                setTimeout(() => {
-                    world.main.resetSound(world.main.SOUND_DAMAGE);
-                }, 500);
             }
         }, 1000 / 60);
         world.CollisionIntervalsBoss.push(interval);
@@ -136,9 +129,9 @@ function bottleCheck(world) {
     return setInterval(() => {
         if (world.keyboard.F) {
             if (world.heroHasBottles()) {
-                world.main.playSound(world.main.SOUND_SWOOSH, 1);
+                world.hero.playSound(world.hero.SOUND_SWOOSH, 1);
                 setTimeout(() => {
-                    world.main.resetSound(world.main.SOUND_SWOOSH);
+                    world.hero.resetSound(world.hero.SOUND_SWOOSH);
                 }, 400);
                 world.throwBottle();
                 world.temporarilyDisableBottleCheck();
@@ -153,14 +146,14 @@ function bottleCheck(world) {
  */
 function checkHeroCoinCollision(world) {
     world.coins.forEach((coin) => {
-        if (world.main.isColliding(coin)) {
-            world.main.collectCoin();
+        if (world.hero.isColliding(coin)) {
+            world.hero.collectCoin();
             let newCollectSound = new Audio('sounds/collect.mp3');
             if (musicIsmute) {
                 newCollectSound.volume = 0;
             }
-            world.main.playSound(newCollectSound, 1);
-            world.coinBar.setBarPercentage(world.main.coins);
+            world.hero.playSound(newCollectSound, 1);
+            world.coinBar.setBarPercentage(world.hero.coins);
             world.removeObjectFromGame(world.coins, coin);
         }
     });
@@ -172,14 +165,14 @@ function checkHeroCoinCollision(world) {
  */
 function checkHeroBottleCollision(world) {
     world.bottles.forEach((bottle) => {
-        if (world.main.isColliding(bottle)) {
-            world.main.collectBottle();
+        if (world.hero.isColliding(bottle)) {
+            world.hero.collectBottle();
             let newCollectSound = new Audio('sounds/collect.mp3');
             if (musicIsmute) {
                 newCollectSound.volume = 0;
             }
-            world.main.playSound(newCollectSound, 1);
-            world.bottleBar.setBarPercentage(world.main.bottles);
+            world.hero.playSound(newCollectSound, 1);
+            world.bottleBar.setBarPercentage(world.hero.bottles);
             world.removeObjectFromGame(world.bottles, bottle);
         }
     });
@@ -217,7 +210,7 @@ function drawObjects(world) {
     world.addToMap(world.healthBar);
     world.addToMap(world.coinBar);
     world.addToMap(world.bottleBar);
-    world.addToMap(world.main);
+    world.addToMap(world.hero);
     world.addObjectsToMap(world.throwableBottles);
     world.addObjectsToMap(world.enemies);
     world.addObjectsToMap(world.boss);
@@ -230,19 +223,10 @@ function drawObjects(world) {
  * removes game over screen if game is reseted
  */
 function removeGameOverScreen() {
+    toggleMobileBar();
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('start-screen').src = 'img/9_intro_outro_screens/game_over/game over!.png';
     document.getElementById('restart-return').style.display = 'none';
-}
-
-/**
- * loads game over screen if player dies
- */
-function loadGameOverScreen() {
-    document.getElementById('start-screen').style.display = 'inline';
-    document.getElementById('start-screen').src = 'img/9_intro_outro_screens/game_over/game over!.png';
-
-    document.getElementById('restart-return').style.display = 'flex';
 }
 
 /**
@@ -250,14 +234,14 @@ function loadGameOverScreen() {
  */
 function muteAllMusic(world) {
     world.GAME_MUSIC.volume = 0;
-    world.main.SOUND_VICTORY.volume = 0;
-    world.main.SOUND_WALKING.volume = 0;
-    world.main.SOUND_JUMPING.volume = 0;
-    world.main.SOUND_JUMPING_ENEMY.volume = 0;
-    world.main.SOUND_DAMAGE.volume = 0;
-    world.main.SOUND_BOTTLE_BREAK.volume = 0;
-    world.main.SOUND_COLLECT.volume = 0;
-    world.main.SOUND_SWOOSH.volume = 0;
+    world.hero.SOUND_VICTORY.volume = 0;
+    world.hero.SOUND_WALKING.volume = 0;
+    world.hero.SOUND_JUMPING.volume = 0;
+    world.hero.SOUND_JUMPING_ENEMY.volume = 0;
+    world.hero.SOUND_DAMAGE.volume = 0;
+    world.hero.SOUND_BOTTLE_BREAK.volume = 0;
+    world.hero.SOUND_COLLECT.volume = 0;
+    world.hero.SOUND_SWOOSH.volume = 0;
     if (world.boss[0]) {
         world.boss[0].SOUND_CLUCKING.volume = 0;
     }
@@ -268,14 +252,14 @@ function muteAllMusic(world) {
  */
 function unMuteAllMusic(world) {
     world.GAME_MUSIC.volume = 0.1;
-    world.main.SOUND_VICTORY.volume = 0.5;
-    world.main.SOUND_WALKING.volume = 1;
-    world.main.SOUND_JUMPING.volume = 1;
-    world.main.SOUND_JUMPING_ENEMY.volume = 1;
-    world.main.SOUND_DAMAGE.volume = 1;
-    world.main.SOUND_BOTTLE_BREAK.volume = 1;
-    world.main.SOUND_COLLECT.volume = 1;
-    world.main.SOUND_SWOOSH.volume = 1;
+    world.hero.SOUND_VICTORY.volume = 0.5;
+    world.hero.SOUND_WALKING.volume = 1;
+    world.hero.SOUND_JUMPING.volume = 1;
+    world.hero.SOUND_JUMPING_ENEMY.volume = 1;
+    world.hero.SOUND_DAMAGE.volume = 1;
+    world.hero.SOUND_BOTTLE_BREAK.volume = 1;
+    world.hero.SOUND_COLLECT.volume = 1;
+    world.hero.SOUND_SWOOSH.volume = 1;
     if (world.boss[0]) {
         world.boss[0].SOUND_CLUCKING.volume = 0.5;
     }

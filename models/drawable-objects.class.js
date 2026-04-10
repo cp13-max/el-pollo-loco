@@ -44,7 +44,7 @@ class DrawableObject {
      */
     drawFrame(ctx) {
         if (
-            this instanceof Main ||
+            this instanceof Hero ||
             this instanceof Chicken ||
             this instanceof Endboss ||
             this instanceof Bottle ||

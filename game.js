@@ -5,7 +5,7 @@ const scripts = [
     './models/health-status.class.js',
     './models/bottle-status.class.js',
     './models/coin-status.class.js',
-    './models/main.class.js',
+    './models/hero.class.js',
     './models/chicken.class.js',
     './models/small-chicken.class.js',
     './models/endboss.class.js',
@@ -18,7 +18,7 @@ const scripts = [
     './models/keyboard.class.js',
     './models/level.class.js',
     './levels/level1.js',
-    '../js/world-support.js',
+    './js/world-support.js',
     './models/world.class.js',
 ];
 
@@ -71,6 +71,14 @@ async function loadGame() {
  */
 function ToggleLoadingScreen() {
     document.getElementById('loading-screen').classList.toggle('d-none');
+}
+
+function toggleMobileBar() {
+    if (matchMedia('(pointer:coarse)').matches) {
+        document.getElementById('mobile-bar').classList.toggle('d-flex');
+        console.log('toggled');
+        
+    }
 }
 
 /**
@@ -129,12 +137,14 @@ function startGame() {
     if (!gameHasStarted) {
         setLevel1();
         setWorld(canvas, keyboard, level1);
-
+        
         gameHasStarted = true;
-        removeStartScreen();
     }
     pauseContinueGame();
     setDefaultMusicVolume();
+    if (!gameIsOver) {
+        removeStartScreen();
+    }
 }
 
 /**
@@ -173,6 +183,7 @@ function setWorld(canvas, keyboard, level1) {
  * removes the start screen when game begins
  */
 function removeStartScreen() {
+    toggleMobileBar();
     document.getElementById('start-screen').style.display = 'none';
 }
 
@@ -180,6 +191,7 @@ function removeStartScreen() {
  * load start screen
  */
 function loadStartScreen() {
+    toggleMobileBar();
     document.getElementById('start-screen').style.display = 'inline';
     document.getElementById('start-screen').src = './img/9_intro_outro_screens/start/startscreen_1.png';
     document.getElementById('restart-return').style.display = 'none';
@@ -198,7 +210,6 @@ function returnToScreen() {
     pauseContinueGame();
     muteAllMusic(world);
     loadStartScreen();
-    gameHasStarted = false;
 }
 
 /**

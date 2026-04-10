@@ -1,5 +1,6 @@
 html {
     overflow-y: hidden;
+    min-height: 100vh;
 }
 
 body {
@@ -7,6 +8,17 @@ body {
     flex-direction: column;
     align-items: center;
     margin: 0;
+    min-height: 100vh;
+}
+
+.body-imprint {
+    height: 100vh;
+    width: 100%;
+    background: url('img/downloaded/desert-2.jpg');
+    background-size: cover;
+    background-position: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+    backdrop-filter: blur(10px) sepia(60%);
 }
 
 canvas {
@@ -36,12 +48,12 @@ canvas {
 }
 
 .full-screen {
-    height: 40px;
-    width: 40px;
+    height: 50px;
+    width: 50px;
     position: absolute;
     bottom: 1%;
     right: 1%;
-    /* filter: brightness(0) saturate(100%); */
+    filter: brightness(0) saturate(100%);
     cursor: pointer;
 }
 
@@ -81,7 +93,7 @@ canvas {
 .restart-button:hover,
 .play-music-button:hover,
 .return-to-screen-button:hover,
-.control-arrow:hover{
+.control-arrow:hover {
     scale: 1.2;
 }
 
@@ -127,7 +139,8 @@ canvas {
 .legal-notice {
     height: 40px;
     width: 40px;
-    
+    object-fit: contain;
+
     /* filter: brightness(0) saturate(100%); */
     cursor: pointer;
 }
@@ -150,6 +163,7 @@ h1 {
     width: 100%;
     background: url('img/downloaded/desert-2.jpg');
     background-size: cover;
+    background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -167,12 +181,12 @@ h1 {
     gap: 16px;
 }
 
-.control-wrap{
+.control-wrap {
     display: flex;
     gap: 32px;
 }
 
-.control-arrow{
+.control-arrow {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -188,18 +202,14 @@ h1 {
     gap: 16px;
 }
 
-.imprint{
+.imprint {
     display: flex;
     align-items: center;
     text-decoration: none;
 }
 
-.rotate-arrow{
+.rotate-arrow {
     rotate: 270deg;
-}
-
-.d-flex{
-    display: flex;
 }
 
 .rotate-notice {
@@ -250,6 +260,10 @@ h1 {
     display: none;
 }
 
+.d-flex {
+    display: flex;
+}
+
 .restart-return {
     display: none;
     gap: 64px;
@@ -258,7 +272,7 @@ h1 {
     bottom: 72px;
 }
 
-.restart-return img{
+.restart-return img {
     height: 100px;
     width: 100px;
 }
@@ -281,10 +295,6 @@ h1 {
     }
 }
 
-
-    
-
-
 @media screen and (pointer: coarse) {
     .canvas-container {
         width: 100%;
@@ -293,17 +303,10 @@ h1 {
     .full-screen {
         display: none;
     }
-
-    
-
 }
 
 @media screen and (pointer: coarse) {
-    .mobile-bar {
-        display: flex;
-    }
-
-    .control-arrow{
+    .control-arrow {
         display: none;
     }
 }
@@ -316,7 +319,6 @@ h1 {
         width: 100%;
         max-width: 720px;
     }
-
 }
 
 @media screen and (max-width: 500px) {

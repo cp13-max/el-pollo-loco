@@ -10,7 +10,7 @@ class World {
     amountOfClouds;
     backgroundObjects = [];
     level_length;
-    main = [];
+    hero = [];
     throwableBottles = [];
     CollisionIntervals = [];
     CollisionIntervalsBoss = [];
@@ -52,7 +52,7 @@ class World {
      */
     HeroPositionCheck() {
         return setInterval(() => {
-            if (this.main.x > 2009) {
+            if (this.hero.x > 2009) {
                 clearInterval(this.checkHeroPosition);
                 this.boss[0].alertAnimation();
             }
@@ -90,7 +90,7 @@ class World {
         enemy.deathAnimation();
 
         if (enemy instanceof Chicken) {
-            this.main.playSound(this.main.SOUND_JUMPING_ENEMY, 1);
+            this.hero.playSound(this.hero.SOUND_JUMPING_ENEMY, 1);
             setTimeout(() => {
                 this.removeObjectFromGame(this.enemies, enemy);
             }, 500);
@@ -128,18 +128,29 @@ class World {
      * calls multiple functions when player is hit
      */
     heroTakesHit(position) {
-        if (!this.main.isHurt()) {
-            this.main.getHit();
-            this.main.damageThrowBack(position);
+        if (!this.hero.isHurt()) {
+            
+            this.playDamageSound()
+            this.hero.getHit();
+            this.hero.damageThrowBack(position);
         }
-        this.main.hasIdleTimeStarted = false;
-        this.healthBar.setBarPercentage(this.main.health);
-        if (this.main.isDead()) {
+        this.hero.hasIdleTimeStarted = false;
+        this.healthBar.setBarPercentage(this.hero.health);
+        if (this.hero.isDead() && !this.hero.dead) {
+            this.hero.dead = true;
             setTimeout(() => {
                 gameIsOver = true;
-                loadGameOverScreen();
+                this.loadGameOverScreen();
             }, 1200);
         }
+    }
+
+    playDamageSound(){
+        let damageSound = new Audio('sounds/damage.mp3');
+            damageSound.volume = 0.4;
+            if (!musicIsmute) {
+                damageSound.play();
+            }
     }
 
     /**
@@ -147,9 +158,9 @@ class World {
      * @param {object} bottle
      */
     bottleBreaks(bottle) {
-        this.main.playSound(this.main.SOUND_BOTTLE_BREAK, 1);
+        this.hero.playSound(this.hero.SOUND_BOTTLE_BREAK, 1);
         setTimeout(() => {
-            this.main.resetSound(this.main.SOUND_BOTTLE_BREAK);
+            this.hero.resetSound(this.hero.SOUND_BOTTLE_BREAK);
         }, 300);
 
         bottle.breakBottle();
@@ -172,12 +183,12 @@ class World {
      * creates a new bottle(object) and throws it in current direction
      */
     throwBottle() {
-        let newBottle = new ThrowableBottle(this.main.x, this.main.y);
+        let newBottle = new ThrowableBottle(this.hero.x, this.hero.y);
         this.throwableBottles.push(newBottle);
         checkForBottleEnemyCollision(this, newBottle);
-        newBottle.throwBottle(this.main.otherDirection);
-        this.main.looseBottle();
-        this.bottleBar.setBarPercentage(this.main.bottles);
+        newBottle.throwBottle(this.hero.otherDirection);
+        this.hero.looseBottle();
+        this.bottleBar.setBarPercentage(this.hero.bottles);
     }
 
     /**
@@ -207,8 +218,8 @@ class World {
      * creates the player character and sets world music
      */
     setWorld() {
-        this.main = new Main(this.level_length);
-        this.main.world = this;
+        this.hero = new Hero(this.level_length);
+        this.hero.world = this;
         this.bossHealth.push(new BossHealth());
         this.GAME_MUSIC.loop = true;
         this.GAME_MUSIC.play();
@@ -292,11 +303,24 @@ class World {
      * loads victory screen if boss dies
      */
     loadVictoryScreen() {
-        this.main.resetSound(this.GAME_MUSIC);
-        this.main.playSound(this.main.SOUND_VICTORY, 0.5);
+        this.hero.resetSound(this.GAME_MUSIC);
+        this.hero.playSound(this.hero.SOUND_VICTORY, 0.5);
+        toggleMobileBar();
         document.getElementById('start-screen').style.display = 'inline';
         document.getElementById('start-screen').src = 'img/9_intro_outro_screens/win/won_2.png';
 
+        document.getElementById('restart-return').style.display = 'flex';
+    }
+
+    /**
+     * loads game over screen if player dies
+     */
+    loadGameOverScreen() {
+        this.hero.resetSound(this.GAME_MUSIC);
+        this.hero.playSound(this.hero.SOUND_GAME_OVER, 0.5);
+        toggleMobileBar();
+        document.getElementById('start-screen').style.display = 'inline';
+        document.getElementById('start-screen').src = 'img/9_intro_outro_screens/game_over/game over!.png';
         document.getElementById('restart-return').style.display = 'flex';
     }
 
@@ -330,8 +354,8 @@ class World {
      * resets the game music
      */
     resetSounds() {
-        this.main.resetSound(this.main.SOUND_VICTORY);
-        this.main.resetSound(this.GAME_MUSIC);
-        this.main.playSound(this.GAME_MUSIC, 0.1);
+        this.hero.resetSound(this.hero.SOUND_VICTORY);
+        this.hero.resetSound(this.GAME_MUSIC);
+        this.hero.playSound(this.GAME_MUSIC, 0.1);
     }
 }

@@ -1,4 +1,4 @@
-class Main extends MovableObject {
+class Hero extends MovableObject {
     x = 120;
     y = 135;
     height = 300;
@@ -10,6 +10,7 @@ class Main extends MovableObject {
     // animationIsPlaying = false;
     movementAnimas;
     world;
+    dead = false;
 
     SOUND_WALKING = new Audio('sounds/walking-outside.mp3');
     SOUND_JUMPING = new Audio('sounds/jump2.mp3');
@@ -172,26 +173,31 @@ class Main extends MovableObject {
                 this.playAnimation(this.IMAGES_HURT);
                 return;
             }
-
-            if (this.world.keyboard.SPACE && !this.isAirborne()) {
-                this.jump();
-            }
-
-            if (this.isAirborne()) {
-                this.playJumpAnimation();
-            }
-
-            if (this.world.keyboard.RIGHT & !this.isAirborne() || this.world.keyboard.LEFT & !this.isAirborne()) {
-                this.playSound(this.SOUND_WALKING, 1);
-                this.playAnimation(this.IMAGES_WALKING);
-            }
-
-            if (!this.world.keyboard.RIGHT & !this.world.keyboard.LEFT || this.isAirborne()) {
-                this.resetSound(this.SOUND_WALKING);
-            }
-
+            this.jumpAnimation();
+            this.walkAnimation();
             this.checkForIdleStatus();
         }, 100);
+    }
+
+    jumpAnimation() {
+        if (this.world.keyboard.SPACE && !this.isAirborne()) {
+            this.jump();
+        }
+
+        if (this.isAirborne()) {
+            this.playJumpAnimation();
+        }
+    }
+
+    walkAnimation() {
+        if (this.world.keyboard.RIGHT & !this.isAirborne() || this.world.keyboard.LEFT & !this.isAirborne()) {
+            this.playSound(this.SOUND_WALKING, 1);
+            this.playAnimation(this.IMAGES_WALKING);
+        }
+
+        if (!this.world.keyboard.RIGHT & !this.world.keyboard.LEFT || this.isAirborne()) {
+            this.resetSound(this.SOUND_WALKING);
+        }
     }
 
     /**
